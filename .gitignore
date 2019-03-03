@@ -1,4 +1,22 @@
 .vscode
 
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# C extensions
+*.so
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Django stuff:
+*.log
+*.pot
+
+#sqlite
+db.sqlite3
+
 budget_app_env/
 csvFIles/
