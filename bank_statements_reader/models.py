@@ -4,7 +4,7 @@ from django.db import models
 from datetime import date
 
 
-class Transactions(models.Model):
+class Transaction(models.Model):
 
     # ?
     INCOME = '1'
@@ -39,4 +39,3 @@ class Transactions(models.Model):
     
     def __str__(self):
         return self.origin
-
