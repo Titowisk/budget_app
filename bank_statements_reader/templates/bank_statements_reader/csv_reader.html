@@ -1,0 +1,13 @@
+
+<form action="{%  url 'csv-file' %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <!-- <label for="bank_statement">Choose a profile picture:</label>
+
+    <input type="file"
+        id="bank_statement" name="bank_statement"
+        accept=".csv">
+     -->
+    {{ form }}
+        <button type="submit">Upload!</button>
+</form>
+

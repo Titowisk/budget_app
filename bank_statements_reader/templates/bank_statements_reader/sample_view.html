@@ -1,0 +1,28 @@
+<table>
+    <thead>
+        <tr>
+            <th>Origem</th>
+            <th>Expense</th>
+            <th>Income</th>
+            <th>Flow_Method</th>
+            <th>Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for transaction in transactions_list %}
+            <tr>
+                <td>{{ transacion.origin }}</td>
+                {% if transacion.flow_type == "0" %}
+                    <td style="color: red;">{{ transacion.amount }}</td>
+                    <td>--</td>
+                {% else %}
+                    <td>--</td>
+                    <td style="color: green;">{{ transacion.amount }}</td>
+                {% endif %}
+                <td>{{ transacion.flow_method }}</td>
+                <td>{{ transacion.date }}</td>
+
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
