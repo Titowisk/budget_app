@@ -27,52 +27,59 @@ def format_date(raw_date):
     return date(year, month, day)
 
 
-def handle_csv_file(csv_file):
+def read_csv_file(csv_file):
     pair_flag = False
-    
+    list_of_transactions = []
+    transaction = dict()
     for byte_row in csv_file:
         row = byte_row.decode(encoding='iso-8859-1', errors='strict')
         fields = row.split(";")
-        temporary_fields = True
         try:    
             if (pair_flag):
                 pair_flag = False
                 # handles pair's second line
                 if (fields[1] != "Total do Dia"):
-                    transaction.origin = fields[1]
-                transaction.print_flow()
-                
+                    transaction['origin'] = fields[1]
+
+                list_of_transactions.append(transaction)
+                print(transaction.items())
+
             elif (fields[2].isdigit()): # if line has a document_number it means it will show the cash_flow information I want
                 # handles pair's first line 
                 print("Documento Numero: {0}".format(fields[2]))
-               
-                # creates a helper to assign to the Object Transaction
-                temporary_fields = {
-                    'amount': 0, 'origin': '', 'flow_method': '',
-                    'date': '', 'flow_type': ''
-                }
-                transaction = Transaction()
+                
+                ## creates a helper to assign to the Object Transaction
+                transaction = dict()
                 if (fields[4] != ""):
-                    transaction.amount = format_amount(fields[4]) # expense
-                    transaction.flow_type = '0'
+                    transaction['amount'] = format_amount(fields[4]) # expense
+                    transaction['flow_type'] = '0'
                 elif(fields[3] != ""):
-                    transaction.amount = format_amount(fields[3]) # income
-                    transaction.flow_type = '1'
+                    transaction['amount'] = format_amount(fields[3]) # income
+                    transaction['flow_type'] = '1'
 
-                transaction.date = format_date(fields[0])
-                transaction.flow_method = fields[1]
-                transaction.save()
+                transaction['date'] = format_date(fields[0])
+                transaction['flow_method'] = fields[1]
                 pair_flag = True
         except IndexError: # rows have diferents number of fields
             pass
+        
+    return list_of_transactions
+
+def create_transaction(transaction_dict):
+    t = Transaction(
+        origin = transaction_dict['origin'],
+        amount = transaction_dict['amount'],
+        flow_method = transaction_dict['flow_method'],
+        date = transaction_dict['date'],
+        flow_type = transaction_dict['flow_type']
+    )
+    t.save()
 
 # landing-page to read files
 class ReadFilesView(FormView):
     template_name = "bank_statements_reader/csv_reader.html"
     success_url = "sample_statement_table"
     form_class = UploadFileForm
-
-    
 
 
     def post(self, request, *args, **kwargs):
@@ -84,7 +91,10 @@ class ReadFilesView(FormView):
         form = self.get_form(form_class)
         file = request.FILES['file']
         if form.is_valid():
-            handle_csv_file(file)
+            transactions = read_csv_file(file)
+            for t_dict in transactions:
+                create_transaction(t_dict)
+
             return self.form_valid(form)
         else:
             return self.form_invalid(form)
