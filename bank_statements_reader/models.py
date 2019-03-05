@@ -16,11 +16,11 @@ class Transaction(models.Model):
     )
 
     # attributes
+    statement_number = models.CharField(max_length=15, unique=True, null=True) # I think it's unique (remove null=True later)
     origin = models.CharField(max_length=100)
     amount = models.DecimalField(decimal_places=2, max_digits=9)
     flow_method = models.CharField(max_length=50)
     date = models.DateField()
-    flow_type = models.CharField(max_length=1, choices=EXPENSE_OR_INCOME, default=EXPENSE)
     slug = models.SlugField()
 
     # methods

@@ -12,7 +12,7 @@
         {% for transaction in transactions_list %}
             <tr>
                 <td>{{ transaction.origin }}</td>
-                {% if transaction.flow_type == "0" %}
+                {% if transaction.amount < 0 %}
                     <td style="color: red;">{{ transaction.amount }}</td>
                     <td>--</td>
                 {% else %}

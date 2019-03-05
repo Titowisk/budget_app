@@ -52,10 +52,8 @@ def read_csv_file(csv_file):
                 transaction = dict()
                 if (fields[4] != ""):
                     transaction['amount'] = format_amount(fields[4]) # expense
-                    transaction['flow_type'] = '0'
                 elif(fields[3] != ""):
                     transaction['amount'] = format_amount(fields[3]) # income
-                    transaction['flow_type'] = '1'
 
                 transaction['date'] = format_date(fields[0])
                 transaction['flow_method'] = fields[1]
@@ -70,8 +68,7 @@ def create_transaction(transaction_dict):
         origin = transaction_dict['origin'],
         amount = transaction_dict['amount'],
         flow_method = transaction_dict['flow_method'],
-        date = transaction_dict['date'],
-        flow_type = transaction_dict['flow_type']
+        date = transaction_dict['date']
     )
     t.save()
 
