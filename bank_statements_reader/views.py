@@ -118,3 +118,9 @@ class ShowSampleView(ListView):
     template_name = "bank_statements_reader/sample_view.html"
     model = Transaction
     context_object_name = "transactions_list"
+
+    # show the latest 15 records (ordered_by id) as a sample view
+    def get_queryset(self):
+        transactions = Transaction.objects.order_by('id')
+        transactions = sorted(transactions, reverse=True, key=lambda x:x.id)
+        return transactions[:15]
