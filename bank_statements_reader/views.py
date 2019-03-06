@@ -1,6 +1,7 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.views.generic import FormView, ListView
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 
 from .forms import UploadFileForm
 from .models import Transaction
@@ -30,10 +31,12 @@ def format_date(raw_date):
 def read_csv_file(csv_file):
     pair_flag = False
     list_of_transactions = []
+    ## creates a helper to assign to the Object Transaction
     transaction = dict()
     for byte_row in csv_file:
         row = byte_row.decode(encoding='iso-8859-1', errors='strict')
         fields = row.split(";")
+        # the info about the transaction comes in a pair of 2 different lines that repeat themselves through the document
         try:    
             if (pair_flag):
                 pair_flag = False
@@ -42,14 +45,15 @@ def read_csv_file(csv_file):
                     transaction['origin'] = fields[1]
 
                 list_of_transactions.append(transaction)
-                print(transaction.items())
+                # print(transaction.items()) # debug
 
             elif (fields[2].isdigit()): # if line has a document_number it means it will show the cash_flow information I want
                 # handles pair's first line 
-                print("Documento Numero: {0}".format(fields[2]))
+                # print("Documento Numero: {0}".format(fields[2])) # debug 
                 
-                ## creates a helper to assign to the Object Transaction
+                ## empty the dict for each new transction
                 transaction = dict()
+                transaction['statement_number'] = fields[2] # statement_number = ex. 0948731
                 if (fields[4] != ""):
                     transaction['amount'] = format_amount(fields[4]) # expense
                 elif(fields[3] != ""):
@@ -64,13 +68,25 @@ def read_csv_file(csv_file):
     return list_of_transactions
 
 def create_transaction(transaction_dict):
-    t = Transaction(
-        origin = transaction_dict['origin'],
-        amount = transaction_dict['amount'],
-        flow_method = transaction_dict['flow_method'],
-        date = transaction_dict['date']
-    )
-    t.save()
+    # checks if statement_number already exists in db
+    try:
+        Transaction.objects.get(statement_number=transaction_dict['statement_number']) # raises DoesNotExist error if not found
+        
+    except ObjectDoesNotExist:
+        # happens when the transaction is indeed new
+        t = Transaction(
+            statement_number = transaction_dict['statement_number'],
+            origin = transaction_dict['origin'],
+            amount = transaction_dict['amount'],
+            flow_method = transaction_dict['flow_method'],
+            date = transaction_dict['date']
+        )
+        t.save()
+    except MultipleObjectsReturned:
+        # if statement_number is unique, then this should never happen!!
+        print("===== |OH GOD, PLEASE DON'T LET THIS HAPPEN| =====")
+
+    
 
 # landing-page to read files
 class ReadFilesView(FormView):
@@ -95,21 +111,6 @@ class ReadFilesView(FormView):
             return self.form_valid(form)
         else:
             return self.form_invalid(form)
-
-# def upload_file(request):
-#     if request.method == 'POST':
-#         print("FOI POST")
-#         form = UploadFileForm(request.POST, request.FILES)
-#         if form.is_valid():
-#             print(request.FILES['file'])
-#             return HttpResponseRedirect('/success/')
-#         else:
-#             print("Form não é válido")
-
-#     else:
-#         form = UploadFileForm()
-    
-#     return render(request, 'bank_statements_reader/csv_reader.html', {'form': form})
 
 
 # page to show a sample of the read files
