@@ -1,0 +1,30 @@
+<table>
+    <thead>
+        <tr>
+            <th>Número do Documento</th>
+            <th>Origem</th>
+            <th>Débito</th>
+            <th>Crédito</th>
+            <th>Tipo</th>
+            <th>Data</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for transaction in transactions_list %}
+            <tr>
+                <td>{{ transaction.statement_number }}</td>
+                <td>{{ transaction.origin }}</td>
+                {% if transaction.amount < 0 %}
+                    <td style="color: red;">{{ transaction.amount }}</td>
+                    <td>--</td>
+                {% else %}
+                    <td>--</td>
+                    <td style="color: green;">{{ transaction.amount }}</td>
+                {% endif %}
+                <td>{{ transaction.flow_method }}</td>
+                <td>{{ transaction.date }}</td>
+
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
