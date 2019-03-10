@@ -1,0 +1,32 @@
+{% extends './base.html' %}
+{% load static %}
+
+{% block title %}
+    BudgetApp
+{% endblock title %}
+
+{% block custom_stylesheet %}
+<link rel="stylesheet" href="{% static 'core/css/index.css' %}">    
+{% endblock custom_stylesheet %}
+
+{% block content %}
+<section class="intro">
+    <div class="intro__frame">
+        <a class="intro__link" href="#">
+            Login
+        </a>
+    </div>
+    <div class="intro__frame">
+        <a class="intro__link" href="#">
+            Demo
+        </a>
+    </div>
+</section>
+{% endblock content %}
+
+
+
+    
+
+    
+    

@@ -1,0 +1,41 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{% block title %}{% endblock title %}</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="{% static 'core/css/core.css' %}">
+    <link rel="stylesheet" href="{% static 'core/css/reset.css' %}">   
+    {% block custom_stylesheet %}{% endblock custom_stylesheet %}
+        
+</head>
+<body>
+    <nav class="menu">
+        <ul class="menu__list">
+            <li class="menu__item">
+                <a href="http://">User</a>
+            </li>
+            <li class="menu__item">
+                <a href="http://">Upload Files</a>
+            </li>
+            <li class="menu__item">
+                <a href="http://">Balance View</a>
+            </li>
+            <li class="menu__item">
+                <a href="http://">History View</a>
+            </li>
+        </ul>
+    </nav>
+    
+    <div class="container">
+        {% block content %}
+        
+        {% endblock content %}
+    </div>
+    
+</body>
+</html>

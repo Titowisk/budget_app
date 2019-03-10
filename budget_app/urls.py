@@ -18,5 +18,6 @@ from django.urls import path, include
 
 urlpatterns = [
     path('bank_statements_reader/', include('bank_statements_reader.urls')),
+    path('', include('core.urls')),
     path('admin/', admin.site.urls),
 ]

@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # my_apps
-    'bank_statements_reader.apps.BankStatementsReaderConfig'
+    'bank_statements_reader.apps.BankStatementsReaderConfig',
+    'core.apps.CoreConfig'
 ]
 
 MIDDLEWARE = [
