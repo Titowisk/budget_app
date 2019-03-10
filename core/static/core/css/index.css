@@ -1,0 +1,26 @@
+
+.intro {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.intro__frame {
+    display: flex;
+    justify-content: center;
+    height: 200px;
+    width: 200px;
+    border: 1px solid #000;
+    margin-left: 40px;
+    margin-right: 40px;
+}
+
+.intro__link {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+}
