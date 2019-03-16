@@ -19,19 +19,22 @@
     <thead class="budget__header">
         <tr class="budget__row">
             <!-- 5 Elementos -->
-            <th>
+            <th class="budget__title">
                 Número do Documento
             </th>
-            <th>
+            <th class="budget__title">
                 Data
             </th>
-            <th>
+            <th class="budget__title">
                 Tipo da Transação
             </th>
-            <th>
+            <th class="budget__title">
                 Origem
             </th>
-            <th>
+            <th class="budget__title">
+                Categoria
+            </th>
+            <th class="budget__title">
                 Valor
             </th>
         </tr>
@@ -51,6 +54,9 @@
             </td>
             <td class="budget__cell budget__origin">
                 {{transaction.origin}}
+            </td>
+            <td class="budget__cell budget__category">
+                Lazer
             </td>
             <td class="budget__cell budget__amount 
             {% if transaction.amount >= 0 %}

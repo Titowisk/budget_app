@@ -4,6 +4,14 @@ table.budget {
     width: 100%;
 }
 
+.budget__title {
+    vertical-align: center;
+    text-align: center;
+    padding: 10px 0 10px 0;
+    font-size: 20px;
+    font-weight: 800;
+}
+
 .budget__body {
     background-color: #ffffff;
 }
