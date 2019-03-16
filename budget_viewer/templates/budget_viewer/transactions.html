@@ -1,0 +1,72 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Transactions{% endblock title %}
+
+
+{% block custom_stylesheet %}
+<link rel="stylesheet" href="{% static 'budget_viewer/css/transactions.css' %}">
+{% endblock custom_stylesheet %}
+    
+
+{% block content %}
+<!-- forms
+- choose from view expenses or view incomes or view all
+- choose month -->
+
+<!-- show transactions objects accordingly to the choosen options -->
+<table class="budget">
+    <thead class="budget__header">
+        <tr class="budget__row">
+            <!-- 5 Elementos -->
+            <th>
+                Número do Documento
+            </th>
+            <th>
+                Data
+            </th>
+            <th>
+                Tipo da Transação
+            </th>
+            <th>
+                Origem
+            </th>
+            <th>
+                Valor
+            </th>
+        </tr>
+    </thead>
+    <tbody class="budget__body">
+        
+        {% for transaction in transactions_list  %}
+        <tr class="budget__row">
+            <td class="budget__cell budget__statement_number">
+                {{transaction.statement_number}}
+            </td>
+            <td class="budget__cell budget__date">
+                {{transaction.date}}
+            </td>
+            <td class="budget__cell budget__flow_method">
+                {{transaction.flow_method}}
+            </td>
+            <td class="budget__cell budget__origin">
+                {{transaction.origin}}
+            </td>
+            <td class="budget__cell budget__amount 
+            {% if transaction.amount >= 0 %}
+            budget__amount--income
+            {% else %}
+            budget__amount--expense
+            {% endif %}
+                ">
+                {{transaction.amount}}
+            </td>
+        </tr>
+        {% endfor %}
+            
+        
+    </tbody>
+</table>
+    
+{% endblock content %}
+    

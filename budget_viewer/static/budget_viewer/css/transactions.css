@@ -1,0 +1,34 @@
+table.budget {
+    border: 1px solid #000;
+    margin-top: 5%;
+    width: 100%;
+}
+
+.budget__body {
+    background-color: #ffffff;
+}
+
+.budget__row {
+    border: solid 1px #d1d1cd;
+}
+
+.budget__cell {
+    vertical-align: center;
+    text-align: center;
+    padding: 5px 0 5px 0; 
+
+}
+
+.budget__amount {
+    font-weight: 600;
+}
+
+.budget__amount--expense {
+    color: red;
+}
+
+.budget__amount--income {
+    color: green;
+}
+
+
