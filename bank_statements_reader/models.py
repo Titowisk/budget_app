@@ -12,8 +12,18 @@ class Year(models.Model):
     pass
 
 class Month(models.Model):
-    # TODO
-    pass
+    """
+    Janeiro, Fevereiro, Março, Abril, Maio, Junho
+    Julho, Agosto, Setembro, Outubro, Novembro, Dezembro
+    """
+
+    MONTH_CHOICES = (
+        (1, "Janeiro"), (2, "Fevereiro"), (3, "Março"), (4, "Abril"), 
+        (5, "Maio"), (6, "Junho"), (7, "Julho"), (8, "Agosto"), 
+        (9, "Setembro"), (10, "Outubro"), (11, "Novembro"), (12, "Dezembro")
+        )
+    
+    month_number = models.CharField(max_length=15, choices=MONTH_CHOICES)
 
 class Transaction(models.Model):
 
@@ -33,6 +43,7 @@ class Transaction(models.Model):
     flow_method = models.CharField(max_length=50)
     date = models.DateField()
     slug = models.SlugField()
+    month = models.ForeignKey('Month', on_delete=models.SET_NULL, null=True, related_name='transactions') # if month is deleted, the transactions still exists
 
     # methods
     def print_flow(self):
