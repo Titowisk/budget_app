@@ -8,3 +8,9 @@
 - Provide at the bottom a row with total sum of transactions
 - If user chooses another year, take him to:
     /budget_viewer/transactions/<year>
+
+
+*bank_statements_reader
+- create BankReader model
+- create Month model
+- create Year model

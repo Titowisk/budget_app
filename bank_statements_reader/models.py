@@ -3,6 +3,17 @@ from django.db import models
 # python
 from datetime import date
 
+class BankStatementReader(models.Model):
+    # TODO
+    pass
+
+class Year(models.Model):
+    # TODO
+    pass
+
+class Month(models.Model):
+    # TODO
+    pass
 
 class Transaction(models.Model):
 
