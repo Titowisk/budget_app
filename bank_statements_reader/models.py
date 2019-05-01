@@ -18,9 +18,9 @@ class Month(models.Model):
     """
 
     MONTH_CHOICES = (
-        (1, "Janeiro"), (2, "Fevereiro"), (3, "Março"), (4, "Abril"), 
-        (5, "Maio"), (6, "Junho"), (7, "Julho"), (8, "Agosto"), 
-        (9, "Setembro"), (10, "Outubro"), (11, "Novembro"), (12, "Dezembro")
+        ("1", "Janeiro"), ("2", "Fevereiro"), ("3", "Março"), ("4", "Abril"), 
+        ("5", "Maio"), ("6", "Junho"), ("7", "Julho"), ("8", "Agosto"), 
+        ("9", "Setembro"), ("10", "Outubro"), ("11", "Novembro"), ("12", "Dezembro")
         )
     
     month_number = models.CharField(max_length=15, choices=MONTH_CHOICES)
