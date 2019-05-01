@@ -40,3 +40,7 @@ class MonthModelTests(TestCase):
     def test_transactions_link(self):
         january = Month.objects.get(month_number="1")
         self.assertEqual(january.transactions.count(), 3)
+    
+    def test_month_display(self):
+        january = Month.objects.get(month_number="1")
+        self.assertEqual(january.get_month_number_display(), "Janeiro")
