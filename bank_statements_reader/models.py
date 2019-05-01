@@ -1,20 +1,28 @@
 # django
 from django.db import models
 # python
-from datetime import date
+from datetime import date, datetime
 
 class BankStatementReader(models.Model):
     # TODO
     pass
 
 class Year(models.Model):
-    # TODO
-    pass
+    """
+    Year model, group months by year
+    """
+    def name_default():
+        return datetime.now().year
+
+    
+    name = models.CharField(max_length=4, default=name_default)
+    # TODO bankAccount = models.ForeignKey() each bankAccount will have years of transactions
+
+    
 
 class Month(models.Model):
     """
-    Janeiro, Fevereiro, Março, Abril, Maio, Junho
-    Julho, Agosto, Setembro, Outubro, Novembro, Dezembro
+    Model month groups transactions by month
     """
 
     MONTH_CHOICES = (
@@ -24,6 +32,7 @@ class Month(models.Model):
         )
     
     month_number = models.CharField(max_length=15, choices=MONTH_CHOICES)
+    year = models.ForeignKey('Year', on_delete=models.CASCADE, related_name='months', null=True)
 
 class Transaction(models.Model):
 

@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from .models import Month, Transaction
+from .models import Year, Month, Transaction
 
 from datetime import date
 
@@ -44,3 +44,22 @@ class MonthModelTests(TestCase):
     def test_month_display(self):
         january = Month.objects.get(month_number="1")
         self.assertEqual(january.get_month_number_display(), "Janeiro")
+
+
+class YearModelTests(TestCase):
+
+    def setUp(self):
+        Year.objects.create(name="2019")
+        Month.objects.create(month_number="1", year=Year.objects.get(name="2019"))
+        Month.objects.create(month_number="3", year=Year.objects.get(name="2019"))
+        Month.objects.create(month_number="5", year=Year.objects.get(name="2019"))
+    
+    def test_year_instance(self):
+        year = Year.objects.get(name="2019")
+        self.assertEqual(year.name, "2019")
+    
+    def test_months_link(self):
+        year = Year.objects.get(name="2019")
+        self.assertEqual(year.months.count(), 3)
+        march = year.months.filter(month_number__contains="3")[0]
+        self.assertEqual(march.month_number, "3")
