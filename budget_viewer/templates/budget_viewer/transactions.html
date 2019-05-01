@@ -1,0 +1,111 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Transactions{% endblock title %}
+
+
+{% block custom_stylesheet %}
+<link rel="stylesheet" href="{% static 'budget_viewer/css/transactions.css' %}">
+{% endblock custom_stylesheet %}
+    
+
+{% block content %}
+<!-- forms
+- choose from view expenses or view incomes or view all
+- choose month -->
+<div class="options">
+    <ul class="options__years">
+        
+        {% if year_month_dict %}
+            
+            {% for year in year_month_dict.keys %}
+                <li class="year__item">{{ year }}</li>
+            {% endfor %}
+        {% else %}       
+            <p>Oops!!</p>
+        {% endif %}
+            
+        <!-- <li class="year__item">2018</li>
+        <li class="year__item">2019</li>
+        <li class="year__item">2020</li> -->
+    </ul>
+
+    <ul class="options__months">
+        
+        <li class="month__item">Jan</li>
+        <li class="month__item">Fev</li>
+        <li class="month__item">Mar</li>
+        <li class="month__item">Abr</li>
+        <li class="month__item">Mai</li>
+        <li class="month__item">Jun</li>
+        <li class="month__item">Jul</li>
+        <li class="month__item">Ago</li>
+        <li class="month__item">Set</li>
+        <li class="month__item">Out</li>
+        <li class="month__item">Nov</li>
+        <li class="month__item">Dez</li>
+    </ul>
+</div>
+
+<!-- show transactions objects accordingly to the choosen options -->
+<table class="budget">
+    <thead class="budget__header">
+        <tr class="budget__row">
+            <!-- 5 Elementos -->
+            <th class="budget__title">
+                Número do Documento
+            </th>
+            <th class="budget__title">
+                Data
+            </th>
+            <th class="budget__title">
+                Tipo da Transação
+            </th>
+            <th class="budget__title">
+                Origem
+            </th>
+            <th class="budget__title">
+                Categoria
+            </th>
+            <th class="budget__title">
+                Valor
+            </th>
+        </tr>
+    </thead>
+    <tbody class="budget__body">
+        
+        {% for transaction in transactions_list  %}
+        <tr class="budget__row">
+            <td class="budget__cell budget__statement_number">
+                {{transaction.statement_number}}
+            </td>
+            <td class="budget__cell budget__date">
+                {{transaction.date}}
+            </td>
+            <td class="budget__cell budget__flow_method">
+                {{transaction.flow_method}}
+            </td>
+            <td class="budget__cell budget__origin">
+                {{transaction.origin}}
+            </td>
+            <td class="budget__cell budget__category">
+                Lazer
+            </td>
+            <td class="budget__cell budget__amount 
+            {% if transaction.amount >= 0 %}
+            budget__amount--income
+            {% else %}
+            budget__amount--expense
+            {% endif %}
+                ">
+                {{transaction.amount}}
+            </td>
+        </tr>
+        {% endfor %}
+            
+        
+    </tbody>
+</table>
+    
+{% endblock content %}
+    

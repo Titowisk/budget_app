@@ -1,0 +1,10 @@
+*budget_viewer - TransactionsView
+
+/budget_viewer/transactions/<current_year>
+- In this url, the page will load with the default year = the current year
+- It will load all transactions for that year.
+- Use JQuery to hide all months, except the choosen month
+- Use Jquery to hide all incomes or all expenses, based on choosen option
+- Provide at the bottom a row with total sum of transactions
+- If user chooses another year, take him to:
+    /budget_viewer/transactions/<year>

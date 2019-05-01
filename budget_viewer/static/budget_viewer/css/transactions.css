@@ -1,0 +1,85 @@
+/* OPTIONS */
+
+
+.options__years {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    margin-top: 50px;
+    border-top: 5px solid #c46f00;
+    border-bottom: 5px solid #c46f00;
+
+}
+
+.year__item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50px;
+    width: 100px;
+    background-color: #c46f00;
+}
+
+.options__months {
+    display: flex;
+    margin-top: 50px;
+    border-top: 5px solid #c49000;
+    border-bottom: 5px solid #c49000;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.month__item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50px;
+    width: 100px;
+    background-color: #c49000;
+}
+
+
+
+/* TABLE */
+table.budget {
+    border: 1px solid #000;
+    margin-top: 5%;
+    width: 100%;
+}
+
+.budget__title {
+    vertical-align: center;
+    text-align: center;
+    padding: 10px 0 10px 0;
+    font-size: 20px;
+    font-weight: 800;
+}
+
+.budget__body {
+    background-color: #ffffff;
+}
+
+.budget__row {
+    border: solid 1px #d1d1cd;
+}
+
+.budget__cell {
+    vertical-align: center;
+    text-align: center;
+    padding: 5px 0 5px 0; 
+
+}
+
+.budget__amount {
+    font-weight: 600;
+}
+
+.budget__amount--expense {
+    color: red;
+}
+
+.budget__amount--income {
+    color: green;
+}
+
+

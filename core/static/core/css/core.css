@@ -9,6 +9,7 @@
 body {
     display: flex;
     height: 100%;
+    overflow: hidden;
 }
 
 a {
@@ -48,8 +49,10 @@ a {
     display: flex;
     flex-direction: column;
     height: 100vh;
+    max-height: 100vh;
     width: 90%;
     /* background-color: #82b0d4; */
     margin-right: 5%;
     margin-left: 5%;
+    overflow-y: scroll;
 }

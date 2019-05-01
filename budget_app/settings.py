@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # my_apps
     'bank_statements_reader.apps.BankStatementsReaderConfig',
-    'core.apps.CoreConfig'
+    'core.apps.CoreConfig',
+    'budget_viewer.apps.BudgetViewerConfig'
 ]
 
 MIDDLEWARE = [
