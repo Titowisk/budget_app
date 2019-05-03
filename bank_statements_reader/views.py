@@ -4,7 +4,7 @@ from django.views.generic import FormView, ListView
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 
 from .forms import UploadFileForm
-from .models import Transaction
+from .models import Transaction, Year, Month
 
 import csv
 from datetime import date
@@ -13,9 +13,12 @@ from decimal import Decimal
 # talvez seja util https://django-import-export.readthedocs.io/en/latest/index.html
 
 def create_transaction(transaction_dict):
+    """
+    Create a Transaction instance or return an existing one
+    """
     # checks if statement_number already exists in db
     try:
-        Transaction.objects.get(statement_number=transaction_dict['statement_number']) # raises DoesNotExist error if not found
+        t = Transaction.objects.get(statement_number=transaction_dict['statement_number']) # raises DoesNotExist error if not found
         
     except ObjectDoesNotExist:
         # happens when the transaction is indeed new
@@ -27,11 +30,40 @@ def create_transaction(transaction_dict):
             date = transaction_dict['date']
         )
         t.save()
+        return t
     except MultipleObjectsReturned:
         # if statement_number is unique, then this should never happen!!
         print("===== |OH GOD, PLEASE DON'T LET THIS HAPPEN| =====")
 
+    return t
+
+def create_year(year):
+    """
+    Create a Year object or return an existing one
+    """
+    year = str(year)
+    try:
+        y = Year.objects.get(name=year)
+    except ObjectDoesNotExist:
+        # if object doesn't exist, create a new one
+        y = Year(name=year)
+        y.save()
     
+    return y
+
+def create_month(month):
+    """
+    Create a Month object or return an existing one
+    """
+    month = str(month)
+    try:
+        m = Month.objects.get(month_number=month)
+    except ObjectDoesNotExist:
+        # if object doesn't exist, create a new one
+        m = Month(month_number=month)
+        m.save()
+    
+    return m
 
 # landing-page to read files
 class ReadFilesView(FormView):
@@ -52,7 +84,12 @@ class ReadFilesView(FormView):
             # transactions = read_csv_file(file)
             transactions = Transaction.read_bradesco_statement_csv(file)
             for t_dict in transactions:
-                create_transaction(t_dict)
+                transaction = create_transaction(t_dict)
+                year = create_year(t_dict['date'].year)
+                month =  create_month(t_dict['date'].month)
+                month.year = year # year has many months
+                transaction.month = month # month has many transactions
+
 
             return self.form_valid(form)
         else:
