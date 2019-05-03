@@ -12,61 +12,6 @@ from decimal import Decimal
 
 # talvez seja util https://django-import-export.readthedocs.io/en/latest/index.html
 
-def format_amount(amount):
-    # takes amount as a string and return as a Decimal
-    # 1.124,00
-    # amount = amount.strip('"').replace(".", "") # amount comes with between "", why? I don't know
-    # digits, decimals = [float(n) for n in amount.split(",")] # [321, 12]
-    amount = amount.replace(".", "").replace(",", ".").strip('"quit')
-    
-    return Decimal(float(amount))
-
-def format_date(raw_date):
-    # takes raw_date in DD/MM/YYYYY
-    # returns YYYY-MM-DD
-    day, month, year = [int(date_string) for date_string in raw_date.split("/")]
-    return date(year, month, day)
-
-
-def read_csv_file(csv_file):
-    pair_flag = False
-    list_of_transactions = []
-    ## creates a helper to assign to the Object Transaction
-    transaction = dict()
-    for byte_row in csv_file:
-        row = byte_row.decode(encoding='iso-8859-1', errors='strict')
-        fields = row.split(";")
-        # the info about the transaction comes in a pair of 2 different lines that repeat themselves through the document
-        try:    
-            if (pair_flag):
-                pair_flag = False
-                # handles pair's second line
-                if (fields[1] != "Total do Dia"):
-                    transaction['origin'] = fields[1]
-
-                list_of_transactions.append(transaction)
-                # print(transaction.items()) # debug
-
-            elif (fields[2].isdigit()): # if line has a document_number it means it will show the cash_flow information I want
-                # handles pair's first line 
-                # print("Documento Numero: {0}".format(fields[2])) # debug 
-                
-                ## empty the dict for each new transction
-                transaction = dict()
-                transaction['statement_number'] = fields[2] # statement_number = ex. 0948731
-                if (fields[4] != ""):
-                    transaction['amount'] = format_amount(fields[4]) # expense
-                elif(fields[3] != ""):
-                    transaction['amount'] = format_amount(fields[3]) # income
-
-                transaction['date'] = format_date(fields[0])
-                transaction['flow_method'] = fields[1]
-                pair_flag = True
-        except IndexError: # rows have diferents number of fields
-            pass
-        
-    return list_of_transactions
-
 def create_transaction(transaction_dict):
     # checks if statement_number already exists in db
     try:
@@ -104,7 +49,8 @@ class ReadFilesView(FormView):
         form = self.get_form(form_class)
         file = request.FILES['file']
         if form.is_valid():
-            transactions = read_csv_file(file)
+            # transactions = read_csv_file(file)
+            transactions = Transaction.read_bradesco_statement_csv(file)
             for t_dict in transactions:
                 create_transaction(t_dict)
 
