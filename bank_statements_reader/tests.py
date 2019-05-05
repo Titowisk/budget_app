@@ -3,6 +3,25 @@ from django.test import TestCase
 from .models import Year, Month, Transaction
 
 from datetime import date
+import decimal
+
+class TransactionModelTests(TestCase):
+    
+    def setUp(self):
+        Transaction.objects.create(
+            origin="Tagarelli", statement_number="0161503", amount="-17.03",
+            flow_method="Visa Electron", date=date(19,1,2)
+        )
+    
+    def test_transaction_instance(self):
+        expense = Transaction.objects.get(statement_number="0161503")
+        self.assertEqual(expense.origin, "Tagarelli")
+        self.assertEqual(str(expense.amount), "-17.03")
+        self.assertEqual(expense.amount, decimal.Decimal("-17.03"))
+        self.assertEqual(expense.flow_method, "Visa Electron")
+        self.assertEqual(expense.date, date(19,1,2))
+
+
 
 class MonthModelTests(TestCase):
     # https://docs.djangoproject.com/en/2.2/topics/testing/overview/
