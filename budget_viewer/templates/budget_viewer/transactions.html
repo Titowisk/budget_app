@@ -16,10 +16,9 @@
 <div class="options">
     <ul class="options__years">
         
-        {% if year_month_dict %}
-            
-            {% for year in year_month_dict.keys %}
-                <li class="year__item">{{ year }}</li>
+        {% if years %}
+            {% for year in years %}
+                <li class="year__item">{{ year.name }}</li>
             {% endfor %}
         {% else %}       
             <p>Oops!!</p>
@@ -74,7 +73,7 @@
     </thead>
     <tbody class="budget__body">
         
-        {% for transaction in transactions_list  %}
+        <!-- {% for transaction in transactions_list  %}
         <tr class="budget__row">
             <td class="budget__cell budget__statement_number">
                 {{transaction.statement_number}}
@@ -101,11 +100,14 @@
                 {{transaction.amount}}
             </td>
         </tr>
-        {% endfor %}
+        {% endfor %} -->
             
         
     </tbody>
 </table>
     
 {% endblock content %}
-    
+
+{% block custom_script %}
+<script src="{% static 'budget_viewer/js/ajax_months.js' %}"></script>
+{% endblock custom_script %}
