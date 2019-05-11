@@ -4,6 +4,7 @@ from django.db import models
 import csv
 from datetime import date, datetime
 from decimal import Decimal
+from django.core import serializers
 
 
 class Year(models.Model):
@@ -86,7 +87,42 @@ class Transaction(models.Model):
     def __str__(self):
         return self.origin
     
-    
+    @staticmethod
+    def serialize_to_json(query):
+        """
+        Takes a DJango query and serialize it to json data format
+        Ex:
+        q1 = Transaction.objects.filter(amount__gte= Decimal(100))
+        data = serializers.serialize("json", q1)
+        [{
+            "model": "bank_statements_reader.transaction",
+            "pk": 790,
+            "fields": {
+                "statement_number": "4191977",
+                "origin": "Remet.vitor Rabelo Filardi",
+                "amount": "562.00",
+                "flow_method": " Ted Csal p/ccor",
+                "date": "0018-12-05",
+                "slug": "",
+                "month": null
+            }
+        }, {
+            "model": "bank_statements_reader.transaction",
+            "pk": 791,
+            "fields": {
+                "statement_number": "4192088",
+                "origin": "Remet.vitor Rabelo Filardi",
+                "amount": "562.00",
+                "flow_method": " Ted Csal p/ccor",
+                "date": "0018-12-05",
+            }
+            ...
+        ]
+        """
+        # https://docs.djangoproject.com/en/2.2/topics/serialization/
+        choosen_fields = ("statement_number", "date", "flow_method", "origin", "amount")
+        return serializers.serialize("json", query, fields=choosen_fields)
+
     
     @staticmethod
     def read_bradesco_statement_csv(csv_file):
