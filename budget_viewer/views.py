@@ -29,6 +29,22 @@ class MonthsByYearList(ListView):
         data['months'] = months_display
         return JsonResponse(data)
 
+class transactionsByMonth(ListView):
+    """
+    receiveis a GET request and returns transactions json data
+    according to the month choosed.
+    """
+    def get(self, request, *args, **kwargs):
+        transactions = Month.objects.get(id=kwargs['month_id']).transactions.all()
+        transactions_json = Transaction.serialize_to_json(transactions)
+        data = dict()
+        data['transactions'] = transactions_json
+
+        # https://docs.djangoproject.com/en/2.2/ref/request-response/#serializing-non-dictionary-objects
+        return JsonResponse(transactions_json, safe=False)
+            
+
+
         
 
 

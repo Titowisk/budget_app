@@ -6,4 +6,5 @@ from . import views
 urlpatterns = [
     path('transactions', views.YearsView.as_view(), name='transactions'),
     path('transactions/monthsByYear/<year>', views.MonthsByYearList.as_view(), name='months_by_year'),
+    path('transactions/transactionsByMonth/<month_id>', views.transactionsByMonth.as_view(), name='transactions_by_month'),
 ]
