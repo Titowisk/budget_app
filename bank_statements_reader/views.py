@@ -89,6 +89,8 @@ class ReadFilesView(FormView):
                 month =  create_month(t_dict['date'].month)
                 month.year = year # year has many months
                 transaction.month = month # month has many transactions
+                month.save() # saves the relationship created
+                transaction.save() # saves the relationship created
 
 
             return self.form_valid(form)
