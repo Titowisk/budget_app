@@ -15,14 +15,14 @@ class YearsView(ListView):
 
 class MonthsByYearList(ListView):
     """
-    receiveis a GET request and returns months json data
+    receiveis a GET request and returns ordered months json data
     according to the year choosed.
     """
     def get(self, request, *args, **kwargs):
         print(kwargs['year'])
         months = Year.objects.get(name=kwargs['year']).months.all()
         months_display = list()
-        for month in months:
+        for month in sorted(months, key=lambda x: x.month_number):
             # {'id': 1,'name': Janeiro}, {'id': 2, 'name': Fevereiro}...
             months_display.append(dict(id=month.id, name=month.get_month_number_display()))
         data = dict()
