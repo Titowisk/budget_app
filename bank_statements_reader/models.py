@@ -45,9 +45,17 @@ def format_amount(amount):
     return Decimal(float(amount))
         
 def format_date(raw_date):
-    # takes raw_date in DD/MM/YYYYY
-    # returns YYYY-MM-DD
-    day, month, year = [int(date_string) for date_string in raw_date.split("/")]
+    """
+    takes raw_date in DD/MM/YY
+    returns YYYY-MM-DD
+    """
+    date_string = raw_date.split("/") # [23, 11, 1989]
+    day = int(date_string[0])
+    month = int(date_string[1])
+
+    current_century = date.today().year // 100 * 100 # 1989 -> 1900, 2019 -> 2000
+    year = int(date_string[2]) + current_century
+    print(year)
     return date(year, month, day)
 
 class Transaction(models.Model):
