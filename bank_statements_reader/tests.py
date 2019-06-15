@@ -19,7 +19,7 @@ class TransactionModelTests(TestCase):
         self.assertEqual(str(expense.amount), "-17.03")
         self.assertEqual(expense.amount, decimal.Decimal("-17.03"))
         self.assertEqual(expense.flow_method, "Visa Electron")
-        self.assertEqual(expense.date, date(19,1,2))
+        self.assertEqual(expense.date, date(2019,1,2))
 
 
 
@@ -41,15 +41,15 @@ class MonthModelTests(TestCase):
         Month.objects.create(month_number="1")
         Transaction.objects.create(
             origin="Tagarelli", statement_number="0161503", amount="-17.03",
-            flow_method="Visa Electron", date=date(19,1,2), month=Month.objects.get(month_number="1")
+            flow_method="Visa Electron", date=date(2019,1,2), month=Month.objects.get(month_number="1")
         )
         Transaction.objects.create(
             origin="Ponto Verde Supermer", statement_number="0300645", amount="-31.68",
-            flow_method="Visa Electron", date=date(19,1,2), month=Month.objects.get(month_number="1")
+            flow_method="Visa Electron", date=date(2019,1,2), month=Month.objects.get(month_number="1")
         )
         Transaction.objects.create(
             origin="Panilha Delicates", statement_number="0090626", amount="-17.99",
-            flow_method="Visa Electron", date=date(19,2,11), month=Month.objects.get(month_number="1")
+            flow_method="Visa Electron", date=date(2019,2,11), month=Month.objects.get(month_number="1")
         )
 
     def test_month_instance(self):
@@ -68,7 +68,7 @@ class MonthModelTests(TestCase):
 class YearModelTests(TestCase):
 
     def setUp(self):
-        Year.objects.create(name="2019")
+        Year.objects.create(name=date(2019, 11, 2).year)
         Month.objects.create(month_number="1", year=Year.objects.get(name="2019"))
         Month.objects.create(month_number="3", year=Year.objects.get(name="2019"))
         Month.objects.create(month_number="5", year=Year.objects.get(name="2019"))
