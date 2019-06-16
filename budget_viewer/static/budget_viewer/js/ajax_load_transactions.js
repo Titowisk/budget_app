@@ -30,32 +30,53 @@ $('.options__months').click(function(e){
         function(data){
             console.log(data)
             console.log(data.transactions)
+            
+            // query the table
+            let $table = $('#transactions_table')
+
             // erase previous data
-            $('.budget__body').empty()
+            $table.empty()
 
-            // takes json data and fill up the each budget__cell
-            JSON.parse(data).forEach(transaction => {
-                let $tr = $('<tr></tr>').addClass('budget__row')
-                
-                let $td_statement_number = $('<td></td>').addClass('budget__cell budget__statement_number').text(transaction.fields.statement_number)
-                let $td_date = $('<td></td>').addClass('budget__cell budget__date').text(transaction.fields.date)
-                let $td_flow_method = $('<td></td>').addClass('budget__cell budget__flow_method').text(transaction.fields.flow_method)
-                let $td_origin = $('<td></td>').addClass('budget__cell budget__origin').text(transaction.fields.origin)
-                let $td_amount
-                if (parseFloat(transaction.fields.amount) >= 0) {
-                    $td_amount = $('<td></td>').addClass('budget__cell budget__amount budget__amount--income').text(transaction.fields.amount)
-                } else {
-                    $td_amount = $('<td></td>').addClass('budget__cell budget__amount budget__amount--expense').text(transaction.fields.amount)
-                }
+            // build header and footer
+            $thead = $('<thead></thead>')
+            $tr = $('<tr></tr>')
+            $tr.append('<th>Numero do Documento</th>')
+            $tr.append('<th>Origem</th>')
+            $tr.append('<th>Quantidade</th>')
+            $tr.append('<th>Tipo</th>')
+            $tr.append('<th>Data</th>')
+            $thead.append($tr)
+            
+            $tfoot = $('<tfoot></tfoot>')
+            $tr = $('<tr></tr>')
+            $tr.append('<td>Numero do Documento</td>')
+            $tr.append('<td>Origem</td>')
+            $tr.append('<td>Quantidade</td>')
+            $tr.append('<td>Tipo</td>')
+            $tr.append('<td>Data</td>')
+            $tfoot.append($tr)
 
-                $tr.append($td_statement_number, $td_date, $td_flow_method, $td_origin, $td_amount)
-                $('.budget__body').append($tr)
-            })
+            $table.append($thead)
+            $table.append($tfoot)
+
+            // load table using DataTable
+            $table.DataTable({
+                "data": JSON.parse(data),
+                "columns": [
+                    {"data": "fields.statement_number"},
+                    {"data": "fields.origin"},
+                    {"data": "fields.amount"},
+                    {"data": "fields.flow_method"},
+                    {"data": "fields.date"},
+                ]
+            })           
             
         }
     ).fail(function(){
         console.log("Não foi possível pegar os dados de transações do mês: " + month_id)
     })
+
+    
 })
 
 
