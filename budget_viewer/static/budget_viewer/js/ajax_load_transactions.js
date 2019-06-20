@@ -45,20 +45,20 @@ $('.options__months').click(function(e){
             // build table header and footer
             $thead = $('<thead></thead>')
             $tr = $('<tr></tr>')
-            $tr.append('<th>Numero do Documento</th>')
+            // $tr.append('<th>Numero do Documento</th>')
             $tr.append('<th>Origem</th>')
             $tr.append('<th>Quantidade</th>')
             $tr.append('<th>Tipo</th>')
-            $tr.append('<th>Data</th>')
+            // $tr.append('<th>Data</th>')
             $thead.append($tr)
             
             $tfoot = $('<tfoot></tfoot>')
             $tr = $('<tr></tr>')
-            $tr.append('<td>Numero do Documento</td>')
+            // $tr.append('<td>Numero do Documento</td>')
             $tr.append('<td>Origem</td>')
             $tr.append('<td>Quantidade</td>')
             $tr.append('<td>Tipo</td>')
-            $tr.append('<td>Data</td>')
+            // $tr.append('<td>Data</td>')
             $tfoot.append($tr)
 
             $table.append($thead)
@@ -66,13 +66,14 @@ $('.options__months').click(function(e){
 
             // load table using DataTable
             $table.DataTable({
+                "dom": "<'column_filter'l><t><ip>", // https://datatables.net/reference/option/dom
                 "data": JSON.parse(data),
                 "columns": [
-                    {"data": "fields.statement_number"},
+                    // {"data": "fields.statement_number"},
                     {"data": "fields.origin"},
                     {"data": "fields.amount"},
                     {"data": "fields.flow_method"},
-                    {"data": "fields.date"},
+                    // {"data": "fields.date"},
                 ]
             })           
             
@@ -81,6 +82,10 @@ $('.options__months').click(function(e){
         console.log("Não foi possível pegar os dados de transações do mês: " + month_id)
     })
 })
+
+// TODO: function that create textinput filtering for "origin" and "type"
+let textInputFilter = (colIndex) => {}
+// TODO: function that create selectinput for "amount" options = ['all', 'incomes', 'expenses']
 
 
 // [{
