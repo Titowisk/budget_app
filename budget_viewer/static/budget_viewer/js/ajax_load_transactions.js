@@ -1,3 +1,4 @@
+let table
 /**Year Click Event
  * When a year is clicked, it shows all months that have registered transactions
  */
@@ -19,6 +20,11 @@ $('.year__item').click(function(e){
                 // append to the final of the .options_months element
                $('.options__months').append($li)
             });
+
+            if ( $.fn.dataTable.isDataTable( '#transactions_table' ) ) {
+                table.destroy()
+                $('#transactions_table').empty()
+            } 
         }
 
     ).fail(function(){
@@ -65,7 +71,10 @@ $('.options__months').click(function(e){
             $table.append($tfoot)
 
             // load table using DataTable
-            $table.DataTable({
+            if ( $.fn.dataTable.isDataTable( '#transactions_table' ) ) {
+                table.destroy()
+            } 
+            table = $table.DataTable({
                 "dom": "<'column_filter'l><t><ip>", // https://datatables.net/reference/option/dom
                 "data": JSON.parse(data),
                 "columns": [
