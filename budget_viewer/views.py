@@ -35,21 +35,13 @@ class transactionsByMonth(ListView):
     according to the month choosed.
     """
     def get(self, request, *args, **kwargs):
-        
         transactions = Month.objects.get(id=kwargs['month_id']).transactions.all()
-        data_list = list()
-        for t in transactions:
-            data_list.append([t.origin, t.amount, t.flow_method])
-        
-        data = { # data formatting for DataTables structure
-            "draw": 1,
-            "recordsTotal": transactions.count(),
-            "recordsFiltered": transactions.count(),
-            "data": data_list
-        }
+        transactions_json = Transaction.serialize_to_json(transactions)
+        data = dict()
+        data['transactions'] = transactions_json
 
         # https://docs.djangoproject.com/en/2.2/ref/request-response/#serializing-non-dictionary-objects
-        return JsonResponse(data, safe=False)
+        return JsonResponse(transactions_json, safe=False)
             
 
 
