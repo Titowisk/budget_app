@@ -19,7 +19,6 @@ class MonthsByYearList(ListView):
     according to the year choosed.
     """
     def get(self, request, *args, **kwargs):
-        print(kwargs['year'])
         months = Year.objects.get(name=kwargs['year']).months.all()
         months_display = list()
         for month in sorted(months, key=lambda x: x.month_number):
