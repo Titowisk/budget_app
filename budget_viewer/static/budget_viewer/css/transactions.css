@@ -1,5 +1,8 @@
 /* OPTIONS */
 
+.options {
+    margin-bottom: 3rem;
+}
 
 .options__years {
     display: flex;
@@ -41,45 +44,14 @@
 
 
 /* TABLE */
-table.budget {
-    border: 1px solid #000;
-    margin-top: 5%;
-    width: 100%;
+.table_section {
+    display: flex;
+    justify-content: center;
 }
 
-.budget__title {
-    vertical-align: center;
-    text-align: center;
-    padding: 10px 0 10px 0;
-    font-size: 20px;
-    font-weight: 800;
-}
+.table_container {
+    width: 80%;
 
-.budget__body {
-    background-color: #ffffff;
-}
-
-.budget__row {
-    border: solid 1px #d1d1cd;
-}
-
-.budget__cell {
-    vertical-align: center;
-    text-align: center;
-    padding: 5px 0 5px 0; 
-
-}
-
-.budget__amount {
-    font-weight: 600;
-}
-
-.budget__amount--expense {
-    color: red;
-}
-
-.budget__amount--income {
-    color: green;
 }
 
 
