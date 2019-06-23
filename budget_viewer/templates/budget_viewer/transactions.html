@@ -5,8 +5,9 @@
 
 
 {% block custom_stylesheet %}
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.18/datatables.min.css"/>
-<link rel="stylesheet" href="{% static 'budget_viewer/css/transactions.css' %}">
+<link rel="stylesheet" href="{% static 'core/css/bootstrap.css' %}"> <!-- Bootstrap 4-->
+<link rel="stylesheet" href="{% static 'core/css/datatables.css' %}"> <!-- DataTables-->
+<link rel="stylesheet" href="{% static 'budget_viewer/css/transactions.css' %}"> 
 {% endblock custom_stylesheet %}
     
 
@@ -50,7 +51,7 @@
 <!-- show transactions objects accordingly to the choosen options -->
 <section class="table_section">
     <div class="table_container">
-        <table id="transactions_table" class="display" style="width: 100%;">
+        <table id="transactions_table" class="table table-striped table-bordered" style="width: 100%;">
            <thead>
                <tr>
                    <th>Origem</th>
@@ -65,6 +66,9 @@
 {% endblock content %}
 
 {% block custom_script %}
-<script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.18/datatables.min.js"></script>
-<script src="{% static 'budget_viewer/js/ajax_load_transactions.js' %}"></script>
+<script src="{% static 'core/js/jquery-3.4.1.js' %}"></script> <!-- JQuery -->
+<script src="{% static 'core/js/popper.min.js' %}"></script> <!-- Popper -->
+<script src="{% static 'core/js/bootstrap.js' %}"></script> <!-- Bootstrap -->
+<script src="{% static 'core/js/datatables.js' %}"></script> <!-- DataTable -->
+<script src="{% static 'budget_viewer/js/ajax_load_transactions.js' %}"></script> <!-- MyJs -->
 {% endblock custom_script %}
