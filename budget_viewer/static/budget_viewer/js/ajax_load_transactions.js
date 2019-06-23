@@ -57,7 +57,8 @@ $(document).ready(function(){
                     table.destroy() // if table exists, destroy it
                 } 
                 table = $table.DataTable({
-                    "dom": "<l><t><ip>", // https://datatables.net/reference/option/dom
+                    // "dom": "<l><t><ip>", // https://datatables.net/reference/option/dom // causes a bug for bootstrap 4 styling
+                    "searching": false,
                     "data": JSON.parse(data),
                     // https://datatables.net/reference/option/columns
                     "columns": [
