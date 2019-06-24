@@ -41,7 +41,25 @@
     background-color: #c49000;
 }
 
+/* SUMMARY */
+.summary__title {
+    text-align: center;
+    font-weight: bold;
 
+}
+
+.summary__subtitle {
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.summary__total_expenses {
+    color: #B30000;
+}
+
+.summary__total_incomes {
+    color: #04B335;
+}
 
 /* TABLE */
 .table_section {
