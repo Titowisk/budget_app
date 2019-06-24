@@ -50,7 +50,7 @@ $(document).ready(function(){
         $.get(`transactions/transactionsByMonth/${month_id}`,
             function(data){
                 // load summary section
-                
+                loadSummarySection(data)
                 // load table
                 loadDataTable(data)
                 
@@ -98,5 +98,11 @@ $(document).ready(function(){
                 {"targets": [1, 2], "className": "dt-body-center"}
             ]
         })
+    }
+
+    let loadSummarySection = (data) => {
+        $('.summary__total').text(data.summary.summary_total)
+        $('.summary__total_incomes').text(data.summary.incomes_total)
+        $('.summary__total_expenses').text(data.summary.expenses_total)
     }
 })    
