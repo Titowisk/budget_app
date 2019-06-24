@@ -50,6 +50,7 @@
 
 .summary__subtitle {
     font-weight: bold;
+    cursor: pointer;
 }
 
 .summary__total_expenses {

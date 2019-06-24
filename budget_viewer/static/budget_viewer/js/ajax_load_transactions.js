@@ -1,9 +1,15 @@
 $(document).ready(function(){
 
     let table // DataTable
-    // query the html table
 
+    // query the html table
     let $table = $('#transactions_table').hide()
+
+    let summary_filter = {
+        "all": "[0-9]", // any string that contains numerals
+        "income": "^[0-9]", // string that starts with a number
+        "expense": "^-" // string ta starts with '-'
+    }
     /**Year Click Event
      * When a year is clicked, it shows all months that have registered transactions
      */
@@ -59,6 +65,27 @@ $(document).ready(function(){
             console.log("Não foi possível pegar os dados de transações do mês: " + month_id)
         })
     })
+
+    /** Summary Filter Click Event */
+    $('.summary__body > .summary__row').click(function(event){
+        console.log(event.target)
+
+        // only applies if table is visible (display != none)
+        if ($table.css('display') != 'none') {
+
+            // filter based on data-filter value
+            // https://datatables.net/reference/api/column().search()
+            $('#transactions_table').DataTable()
+            .column(1)
+            .search( summary_filter[$(event.target).attr('data-filter')], true, false )
+            .draw()
+
+            // show active filter
+            // TODO
+        }
+
+    })
+
     /**
      * callback function used in $.get to load the DataTable  */ 
     let loadDataTable = (data) => {
@@ -71,7 +98,7 @@ $(document).ready(function(){
         } 
         table = $table.DataTable({
             // "dom": "<l><t><ip>", // https://datatables.net/reference/option/dom // causes a bug for bootstrap 4 styling
-            "searching": false,
+            "searching": true,
             "data": JSON.parse(data.transactions),
             // https://datatables.net/reference/option/columns
             "columns": [
@@ -101,6 +128,7 @@ $(document).ready(function(){
     }
 
     let loadSummarySection = (data) => {
+        // load information from ajax data
         $('.summary__total').text(data.summary.summary_total)
         $('.summary__total_incomes').text(data.summary.incomes_total)
         $('.summary__total_expenses').text(data.summary.expenses_total)
