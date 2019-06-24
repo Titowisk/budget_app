@@ -36,11 +36,17 @@ class transactionsByMonth(ListView):
     def get(self, request, *args, **kwargs):
         transactions = Month.objects.get(id=kwargs['month_id']).transactions.all()
         transactions_json = Transaction.serialize_to_json(transactions)
+        # summary
+        incomes_total = sum(t.amount for t in transactions if t.amount >= 0)
+        expenses_total = sum(t.amount for t in transactions if t.amount < 0)
+        summary_total = incomes_total + expenses_total
+        summary = {"incomes_total": incomes_total, "expenses_total": expenses_total, "summary_total": summary_total}
         data = dict()
         data['transactions'] = transactions_json
+        data['summary'] = summary
 
         # https://docs.djangoproject.com/en/2.2/ref/request-response/#serializing-non-dictionary-objects
-        return JsonResponse(transactions_json, safe=False)
+        return JsonResponse(data, safe=False)
             
 
 
