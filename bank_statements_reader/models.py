@@ -168,7 +168,7 @@ class Transaction(models.Model):
     date = models.DateField()
     slug = models.SlugField()
     month = models.ForeignKey('Month', on_delete=models.SET_NULL, null=True, related_name='transactions') # if month is deleted, the transactions still exists
-    category = models.ForeignKey('Category', on_delete=models.SET_NULL, null=True, related_name='categories') #if category is deleted, the transactions still exists
+    category = models.ForeignKey('Category', on_delete=models.SET_NULL, null=True, related_name='transactions') #if category is deleted, the transactions still exists
 
     # methods
     def print_flow(self):
