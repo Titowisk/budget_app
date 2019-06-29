@@ -6,6 +6,83 @@ from datetime import date, datetime
 from decimal import Decimal
 from django.core import serializers
 
+# Useful Links
+
+## Models 
+## https://docs.djangoproject.com/en/2.2/topics/db/models/
+
+## Objects Manager
+## https://docs.djangoproject.com/en/2.2/topics/db/managers/
+
+## Model Instance Reference
+## https://docs.djangoproject.com/en/2.2/ref/models/instances/
+
+## Model Field Reference
+## https://docs.djangoproject.com/en/2.2/ref/models/fields/
+
+
+
+class CategoryManager(models.Manager):
+
+    
+    def create_category(self, name):
+        """
+        Category.objects.create_category(name="Food")
+
+        Creates a Category object and saves it to the database
+        """
+
+        category = self.create(name=name)
+        # category.save()
+        return category
+
+
+class Category(models.Model):
+    """
+    Category model
+
+    Categories: 
+    Food, Entertainment, Transportation, HealthCare,
+    Clothing, Utilities, Education, Supplies
+
+    One Category can have many Transactions
+    but each Transaction belongs only to one category 
+    """
+
+    CATEGORIES = [
+        ('Food', 'Food'),
+        ('Entertainment', 'Entertainment'),
+        ('Transportation', 'Transportation'),
+        ('HealthCare', 'HealthCare'),
+        ('Clothing', 'Clothing'),
+        ('Utilities', 'Utilities'),
+        ('Education', 'Education'),
+        ('Supplies', 'Supplies'),
+    ]
+
+    objects = CategoryManager()
+
+    name = models.CharField(max_length=25, default=None, null=True, choices=CATEGORIES)
+    # TODO bank_account
+
+    TRANSLATION_PTBR = {
+        'Food': 'Alimentação',
+        'Entertainment': 'Lazer',
+        'Transportation': 'Transporte',
+        'HealthCare': 'Saúde',
+        'Clothing': 'Vestimenta',
+        'Utilities': 'Utilidades',
+        'Education': 'Educação',
+        'Supplies': 'Suprimentos',
+
+    }
+
+    def get_translation(category_name):
+        """
+        Receiveis a category name and returns the corresponding
+        translation to portuguese (Brazillian)
+        """
+        return TRANSLATION_PTBR[category_name]
 
 class Year(models.Model):
     """
@@ -77,6 +154,7 @@ class Transaction(models.Model):
     date = models.DateField()
     slug = models.SlugField()
     month = models.ForeignKey('Month', on_delete=models.SET_NULL, null=True, related_name='transactions') # if month is deleted, the transactions still exists
+    category = models.ForeignKey('Category', on_delete=models.SET_NULL, null=True, related_name='categories') #if category is deleted, the transactions still exists
 
     # methods
     def print_flow(self):
@@ -170,11 +248,8 @@ class Transaction(models.Model):
             except IndexError: # rows have diferents number of fields
                 pass
         return list_of_transactions
+    
+    def identify_category_by_transaction_description():
+        Transaction.objects.all()
 
-class BankStatementReader(models.Model):
-    """
-    Reads a statement csv file and process it to create
-    the Year, Month and Transaction models
-    """
-    # TODO
     
