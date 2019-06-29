@@ -20,6 +20,15 @@ from django.core import serializers
 ## Model Field Reference
 ## https://docs.djangoproject.com/en/2.2/ref/models/fields/
 
+class CategoryNameException(Exception):
+    """
+    Custom Category Exceptions
+    """
+    DEFAULT_MESSAGE = "Only especific categories are allowed"
+
+    def __init__(self, message=DEFAULT_MESSAGE):
+        self.message = message
+    
 
 
 class CategoryManager(models.Manager):
@@ -32,8 +41,13 @@ class CategoryManager(models.Manager):
         Creates a Category object and saves it to the database
         """
 
-        category = self.create(name=name)
-        # category.save()
+        # checks if name matches one of the pre determined choices
+        if ( any([name in category_choice for category_choice in Category.CATEGORIES]) ):
+            category = self.create(name=name)
+        # raises exception if no match occurs
+        else:
+            raise CategoryNameException()
+        
         return category
 
 
