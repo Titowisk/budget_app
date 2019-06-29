@@ -25,7 +25,7 @@ class TransactionModelTests(TestCase):
     def setUp(self):
         Transaction.objects.create(
             origin="Tagarelli", statement_number="0161503", amount="-17.03",
-            flow_method="Visa Electron", date=date(19,1,2)
+            flow_method="Visa Electron", date=date(2019,1,2)
         )
     
     def test_transaction_instance(self):
@@ -35,7 +35,14 @@ class TransactionModelTests(TestCase):
         self.assertEqual(expense.amount, decimal.Decimal("-17.03"))
         self.assertEqual(expense.flow_method, "Visa Electron")
         self.assertEqual(expense.date, date(2019,1,2))
+    
+    def test_transaction_category(self):
+        category_food = Category.objects.create_category("Food")
+        expense = Transaction.objects.get(statement_number="0161503")
+        category_food.transactions.add(expense)
 
+        self.assertEqual(Category.objects.get(id=1).transactions.count(), 1) # Category can access Transaction
+        self.assertEqual(expense.category.name, "Food") # Transaction can be add to Category
 
 
 class MonthModelTests(TestCase):
