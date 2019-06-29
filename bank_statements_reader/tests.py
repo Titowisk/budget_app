@@ -1,9 +1,24 @@
 from django.test import TestCase
 
-from .models import Year, Month, Transaction
+from .models import Year, Month, Transaction, Category, CategoryNameException
 
 from datetime import date
 import decimal
+
+class CategoryModelTests(TestCase):
+
+    def setUp(self):
+        Category.objects.create_category("Food")
+
+    def test_category_instance(self):
+        category = Category.objects.get(name="Food")
+        self.assertEqual(category.name, "Food")
+    
+    def test_category_choices(self):
+        with self.assertRaises(CategoryNameException):
+            category = Category.objects.create_category("Weapons")
+        
+
 
 class TransactionModelTests(TestCase):
     
