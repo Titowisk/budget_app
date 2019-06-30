@@ -91,6 +91,17 @@ $(document).ready(function(){
     */
     const editCategoryEvent = (event) => {
         console.log(`PK da linha clicada é ${event.data.rowData.pk}`)
+        console.log(`TD da categoria clicada é ${$(event.data.category_cell).text()}`)
+        
+
+        // $(event.data.category_cell).popover('show')
+        // add form widget inside (GET?)
+
+        // wait for user input
+
+        // handle user submit (POST)
+
+        // return message or error
     }
 
     /**
@@ -142,8 +153,38 @@ $(document).ready(function(){
                 {
                     "targets": 3,
                     "createdCell": function (td, cellData, rowData, row, col) {
+                        // add popover to all cells from category column 
+                        
+                        let popover_template = `
+                        <div class="popover" role="tooltip">
+                            <div class="arrow"></div>
+                            <h3 class="popover-header"></h3>
+                            <div class="popover-body">
+                                
+                            </div>
+                        </div>
+                        `
+                        // https://getbootstrap.com/docs/4.3/components/popovers/#usage
+                        $(td).popover({
+                            "template": popover_template,
+                            "content": `
+                            <form action="CategoryFormView" method="post">
+                                <select class="custom-select">
+                                    <option selected>Open this select menu</option>
+                                    <option value="cat1">cat1</option>
+                                    <option value="cat2">cat2</option>
+                                    <option value="cat3">cat3</option>
+                                </select>
+                                <button type="submit" class="btn btn-primary btn-sm">Editar esta</button>
+                                <button type="submit" class="btn btn-primary btn-sm">Editar similares </button>
+                            </form>
+                            `,
+                            "title": "Editar Categoria",
+                            "placement": "left",
+                            "html": true
+                        })
                         // Add click event and passes rowData to event.data
-                        $(td).click({rowData}, editCategoryEvent)
+                        $(td).click({rowData, "category_cell": td}, editCategoryEvent)
                     }
                 }
             ]
