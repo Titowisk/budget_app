@@ -68,7 +68,6 @@ $(document).ready(function(){
 
     /** Summary Filter Click Event */
     $('.summary__body > .summary__row').click(function(event){
-        console.log(event.target)
 
         // only applies if table is visible (display != none)
         if ($table.css('display') != 'none') {
@@ -85,6 +84,14 @@ $(document).ready(function(){
         }
 
     })
+
+    /** Edit Category Click Event
+     * This is a Jquery event callback
+     * @param {*} data 
+    */
+    const editCategoryEvent = (event) => {
+        console.log(`PK da linha clicada é ${event.data.rowData.pk}`)
+    }
 
     /**
      * callback function used in $.get to load the DataTable  */ 
@@ -112,20 +119,33 @@ $(document).ready(function(){
                 // {"data": "fields.date"},
             ],
             // https://datatables.net/reference/option/columnDefs
-            "columnDefs": [{
-                "targets": 1,
-                "createdCell": function (td, cellData, rowData, row, col) {
-                    // change color for differenciation of incomes and expenses
-                    if ( cellData < 0) {
-                        $(td).css('color', '#B30000')
-                    } else {
-                        $(td).css('color', '#04B335')
-                    }
-                },
+            "columnDefs": [
+                // change color for differenciation of incomes and expenses
+                {
+                    "targets": 1,
+                    "createdCell": function (td, cellData, rowData, row, col) {
+
+                        if ( cellData < 0) {
+                            $(td).css('color', '#B30000')
+                        } else {
+                            $(td).css('color', '#04B335')
+                        }
+                    },
                 
-            }, 
+                }, 
                 // https://datatables.net/manual/styling/classes
-                {"targets": [1, 2], "className": "dt-body-center"}
+                // center align
+                {
+                    "targets": [1, 2, 3], 
+                    "className": "text-center"
+                },
+                {
+                    "targets": 3,
+                    "createdCell": function (td, cellData, rowData, row, col) {
+                        // Add click event and passes rowData to event.data
+                        $(td).click({rowData}, editCategoryEvent)
+                    }
+                }
             ]
         })
     }
