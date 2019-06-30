@@ -220,7 +220,7 @@ class Transaction(models.Model):
         ]
         """
         # https://docs.djangoproject.com/en/2.2/topics/serialization/
-        choosen_fields = ("statement_number", "date", "flow_method", "origin", "amount")
+        choosen_fields = ("statement_number", "date", "flow_method", "origin", "amount", "category")
         return serializers.serialize("json", query, fields=choosen_fields)
 
     
