@@ -100,6 +100,8 @@ $(document).ready(function(){
             // "dom": "<l><t><ip>", // https://datatables.net/reference/option/dom // causes a bug for bootstrap 4 styling
             "searching": true,
             "data": JSON.parse(data.transactions),
+            // https://datatables.net/reference/option/rowId
+            "rowId": "pk",
             // https://datatables.net/reference/option/columns
             "columns": [
                 // {"data": "fields.statement_number"},
