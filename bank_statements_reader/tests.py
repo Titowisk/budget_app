@@ -4,6 +4,7 @@ from .models import Year, Month, Transaction, Category, CategoryNameException
 
 from datetime import date
 import decimal
+import json
 
 class CategoryModelTests(TestCase):
 
@@ -43,7 +44,32 @@ class TransactionModelTests(TestCase):
 
         self.assertEqual(Category.objects.get(id=1).transactions.count(), 1) # Category can access Transaction
         self.assertEqual(expense.category.name, "Food") # Transaction can be add to Category
-
+    
+    def test_serialize_to_json(self):
+        """
+        [
+            {"model": "bank_statements_reader.transaction", 
+            "pk": 1, 
+            "fields": {
+                "statement_number": "0161503", 
+                "origin": "Tagarelli", 
+                "amount": "-17.03", 
+                "flow_method": "Visa Electron", 
+                "date": "2019-01-02", 
+                "category": null
+                }
+            }
+        """
+        query = Transaction.objects.filter(statement_number="0161503")
+        json_string = Transaction.serialize_to_json(query)
+        self.assertTrue(isinstance(json_string, str)) # serialize returns a json string
+        print(json_string)
+        json_list = json.loads(json_string) # string must be a valid json
+        json_python_object = json_list[0]
+        self.assertEqual(json_python_object["model"], "bank_statements_reader.transaction")
+        self.assertEqual(json_python_object["pk"], 1)
+        self.assertEqual(json_python_object["fields"]["statement_number"], "0161503")
+        
 
 class MonthModelTests(TestCase):
     # https://docs.djangoproject.com/en/2.2/topics/testing/overview/
