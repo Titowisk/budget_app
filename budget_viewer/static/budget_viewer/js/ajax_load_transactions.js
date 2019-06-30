@@ -106,6 +106,7 @@ $(document).ready(function(){
                 {"data": "fields.origin"},
                 {"data": "fields.amount"},
                 {"data": "fields.flow_method"},
+                {"data": "fields.category"},
                 // {"data": "fields.date"},
             ],
             // https://datatables.net/reference/option/columnDefs
