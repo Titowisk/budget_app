@@ -85,15 +85,19 @@ $(document).ready(function(){
 
     })
 
-    /** Edit Category Click Event
-     * This is a Jquery event callback
-     * @param {*} data 
-    */
-    const editCategoryEvent = (event) => {
-        // console.log(`PK da linha clicada é ${event.data.rowData.pk}`)
-        // console.log(`TD da categoria clicada é ${$(event.data.category_cell).text()}`)
+    /** Function Add Popover 
+     * 
+     * @param {*} event 
+     */
+    const addPopover = (select_form, event_data) => {
+        // create popover body
+        let popover_content = `
+            ${select_form}
+            <button type="submit" class="btn btn-primary btn-sm">Editar esta</button>
+            <button type="submit" class="btn btn-primary btn-sm">Editar similares </button>
+        `
         // add popover to all cells from category column 
-        let current_category_cell = event.data.category_cell                       
+        let current_category_cell = event_data.category_cell                       
         let popover_template = `
         <div class="popover" role="tooltip">
             <div class="arrow"></div>
@@ -106,18 +110,7 @@ $(document).ready(function(){
         // https://getbootstrap.com/docs/4.3/components/popovers/#usage
         $(current_category_cell).popover({
             "template": popover_template,
-            "content": `
-            <form action="CategoryFormView" method="post">
-                <select class="custom-select">
-                    <option selected>Open this select menu</option>
-                    <option value="cat1">cat1</option>
-                    <option value="cat2">cat2</option>
-                    <option value="cat3">cat3</option>
-                </select>
-                <button type="submit" class="btn btn-primary btn-sm">Editar esta</button>
-                <button type="submit" class="btn btn-primary btn-sm">Editar similares </button>
-            </form>
-            `,
+            "content": popover_content,
             "title": `Editar Categoria <span class="close-edit-category" aria-hidden="true">&times;</span>`,
             "placement": "left",
             "html": true,
@@ -125,10 +118,31 @@ $(document).ready(function(){
         })
 
         $(current_category_cell).popover('toggle')
+    }
 
-        // $(event.data.category_cell).popover('show')
-        // add form widget inside (GET?)
+    /** Edit Category Click Event
+     * This is a Jquery event callback
+     * @param {*} data 
+    */
+    const editCategoryEvent = (event) => {
+        // console.log(`PK da linha clicada é ${event.data.rowData.pk}`)
+        // console.log(`TD da categoria clicada é ${$(event.data.category_cell).text()}`)
 
+
+         // add form widget inside popover (GET?)
+         let editCategoryForm
+         $.get(
+            // url
+            `transactions/edit-category/${event.data.rowData.pk}`,
+            function(html_select_form){
+                addPopover(html_select_form, event.data)
+            }
+        )
+        .fail()
+
+        
+
+       
         // wait for user input
 
         // handle user submit (POST)
