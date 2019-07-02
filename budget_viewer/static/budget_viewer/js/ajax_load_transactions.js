@@ -90,9 +90,41 @@ $(document).ready(function(){
      * @param {*} data 
     */
     const editCategoryEvent = (event) => {
-        console.log(`PK da linha clicada é ${event.data.rowData.pk}`)
-        console.log(`TD da categoria clicada é ${$(event.data.category_cell).text()}`)
-        
+        // console.log(`PK da linha clicada é ${event.data.rowData.pk}`)
+        // console.log(`TD da categoria clicada é ${$(event.data.category_cell).text()}`)
+        // add popover to all cells from category column 
+        let current_category_cell = event.data.category_cell                       
+        let popover_template = `
+        <div class="popover" role="tooltip">
+            <div class="arrow"></div>
+            <h3 class="popover-header d-flex justify-content-between"></h3>
+            <div class="popover-body">
+                
+            </div>
+        </div>
+        `
+        // https://getbootstrap.com/docs/4.3/components/popovers/#usage
+        $(current_category_cell).popover({
+            "template": popover_template,
+            "content": `
+            <form action="CategoryFormView" method="post">
+                <select class="custom-select">
+                    <option selected>Open this select menu</option>
+                    <option value="cat1">cat1</option>
+                    <option value="cat2">cat2</option>
+                    <option value="cat3">cat3</option>
+                </select>
+                <button type="submit" class="btn btn-primary btn-sm">Editar esta</button>
+                <button type="submit" class="btn btn-primary btn-sm">Editar similares </button>
+            </form>
+            `,
+            "title": `Editar Categoria <span class="close-edit-category" aria-hidden="true">&times;</span>`,
+            "placement": "left",
+            "html": true,
+            "trigger": "manual"
+        })
+
+        $(current_category_cell).popover('toggle')
 
         // $(event.data.category_cell).popover('show')
         // add form widget inside (GET?)
@@ -153,38 +185,10 @@ $(document).ready(function(){
                 {
                     "targets": 3,
                     "createdCell": function (td, cellData, rowData, row, col) {
-                        // add popover to all cells from category column 
                         
-                        let popover_template = `
-                        <div class="popover" role="tooltip">
-                            <div class="arrow"></div>
-                            <h3 class="popover-header"></h3>
-                            <div class="popover-body">
-                                
-                            </div>
-                        </div>
-                        `
-                        // https://getbootstrap.com/docs/4.3/components/popovers/#usage
-                        $(td).popover({
-                            "template": popover_template,
-                            "content": `
-                            <form action="CategoryFormView" method="post">
-                                <select class="custom-select">
-                                    <option selected>Open this select menu</option>
-                                    <option value="cat1">cat1</option>
-                                    <option value="cat2">cat2</option>
-                                    <option value="cat3">cat3</option>
-                                </select>
-                                <button type="submit" class="btn btn-primary btn-sm">Editar esta</button>
-                                <button type="submit" class="btn btn-primary btn-sm">Editar similares </button>
-                            </form>
-                            `,
-                            "title": "Editar Categoria",
-                            "placement": "left",
-                            "html": true
-                        })
                         // Add click event and passes rowData to event.data
                         $(td).click({rowData, "category_cell": td}, editCategoryEvent)
+                        
                     }
                 }
             ]
