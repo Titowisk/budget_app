@@ -36,6 +36,7 @@ class TransactionModelTests(TestCase):
         self.assertEqual(expense.amount, decimal.Decimal("-17.03"))
         self.assertEqual(expense.flow_method, "Visa Electron")
         self.assertEqual(expense.date, date(2019,1,2))
+        self.assertEqual(expense.category, None) # null category from database returns None in python
     
     def test_transaction_category(self):
         category_food = Category.objects.create_category("Food")
@@ -63,7 +64,6 @@ class TransactionModelTests(TestCase):
         query = Transaction.objects.filter(statement_number="0161503")
         json_string = Transaction.serialize_to_json(query)
         self.assertTrue(isinstance(json_string, str)) # serialize returns a json string
-        print(json_string)
         json_list = json.loads(json_string) # string must be a valid json
         json_python_object = json_list[0]
         self.assertEqual(json_python_object["model"], "bank_statements_reader.transaction")
