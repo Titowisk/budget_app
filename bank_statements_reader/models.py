@@ -80,15 +80,14 @@ class Category(models.Model):
     # TODO bank_account
 
     TRANSLATION_PTBR = {
-        'Food': 'Alimentação',
-        'Entertainment': 'Lazer',
-        'Transportation': 'Transporte',
-        'HealthCare': 'Saúde',
-        'Clothing': 'Vestimenta',
-        'Utilities': 'Utilidades',
-        'Education': 'Educação',
-        'Supplies': 'Suprimentos',
-
+        ('Food', 'Alimentação'),
+        ('Entertainment', 'Lazer'),
+        ('Transportation', 'Transporte'),
+        ('HealthCare', 'Saúde'),
+        ('Clothing', 'Vestimenta'),
+        ('Utilities', 'Utilidades'),
+        ('Education', 'Educação'),
+        ('Supplies', 'Suprimentos')
     }
 
     def get_translation(category_name):
