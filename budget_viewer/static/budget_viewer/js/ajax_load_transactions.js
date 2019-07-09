@@ -133,32 +133,71 @@ $(document).ready(function(){
 
     /** Edit Category Click Event
      * This is a Jquery event callback
-     * @param {*} data 
+     * 
+     * @param {} event
+     * event.data.rowData.pk = primary key of the transaction line
+     * event.data.category_cell = element <td> from the category clicked
     */
-    const editCategoryEvent = (event) => {
-        // console.log(`PK da linha clicada é ${event.data.rowData.pk}`)
-        // console.log(`TD da categoria clicada é ${$(event.data.category_cell).text()}`)
-
-
-         // add form widget inside popover (GET?)
-         let editCategoryForm
-         $.get(
+    const editCategoryEvent = (categoryEvent) => {
+  
+        // add form widget inside popover (GET?)
+        let editCategoryForm
+        $.get(
             // url
-            `transactions/edit-category/${event.data.rowData.pk}`,
+            `transactions/edit-category/${categoryEvent.data.rowData.pk}`,
             function(html_select_form){
-                addPopover(html_select_form, event.data)
+                addPopover(html_select_form, categoryEvent.data)
             }
         )
-        .fail()
-
-        
-
+        .fail(function(){
+            // TODO: handle error messages
+            alert("Ocorreu uma falha na busca de opções de categorias")
+        })
+        .done(function(){
+            // TODO: update buttons only are enabled if user change select input
        
-        // wait for user input
+            // wait for user input
+            $('.popover__buttons').click(function(event){
+                console.log( event.target )
+                let data
+                if ( event.target.id == "btn_edit_this") {
+                    // edit only the selected transaction
+                    data = 'this'
+                    
+                } else if (event.target.id == "btn_edit_similars") {
+                    // edit all transactions with similar origin
+                    data = 'similars'
+                }
+                
+                // https://docs.djangoproject.com/en/dev/ref/csrf/#acquiring-csrf-token-from-html
+                // https://api.jquery.com/jquery.ajax/#jQuery-ajax-settings
+                // makes a POST request based on the button clicked
+                $.post({
+                    "url": `transactions/edit-category/${categoryEvent.data.rowData.pk}`,
+                    "beforeSend": function(xhr, settings) {
+                        let csrftoken = $("[name=csrfmiddlewaretoken]").val(); // THIS IS NOT SAFE!!!
+                        if (!this.crossDomain) {
+                            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                        }
+                    },
+                    "data": {
+                        "data": data, 
+                        "newCategoryName": $('#edit-category-select').val()
+                    },
+                    "success": function(data, textStatus, jqXHR ){
+                        // TODO
+                    }
+                })
+                // return message or error
+                .fail(function() {
+                    // TODO
+                    alert("Não foi possível atualizar a categoria da(s) transação(ões).")
+                })
+            })
 
-        // handle user submit (POST)
+            
 
-        // return message or error
+        })
     }
 
     /**
