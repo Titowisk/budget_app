@@ -1,6 +1,15 @@
+/**
+ * 1 - loadDataTable - loads the table and adds a click event to each category cell
+ *     $(td).click({rowData, "category_cell": td}, editCategoryEvent)
+ * 2 - editCategoryEvent  - creates a popover (addPopover) with a select dropdown ($.get) and two buttons
+ *     $.get() - populates the dropdown with a GET to the server
+ * 3 - When the GET is done, creates a click event for the buttons ($('.popover__buttons').click)
+ * 4 - $('.popover__buttons').click creates a POST to change data on the server
+ */
+
 $(document).ready(function(){
 
-    let table // DataTable
+    let year, month_id, table
 
     // query the html table
     let $table = $('#transactions_table').hide()
@@ -14,7 +23,7 @@ $(document).ready(function(){
      * When a year is clicked, it shows all months that have registered transactions
      */
     $('.year__item').click(function(e){
-        let year = $(this).text()
+        year = $(this).text()
 
         // slowly hide table
         $table.hide("slow")
@@ -52,7 +61,7 @@ $(document).ready(function(){
      */
     $('.options__months').click(function(e){  
     
-        let month_id = $(e.target).attr('data-id')
+        month_id = $(e.target).attr('data-id')
         $.get(`transactions/transactionsByMonth/${month_id}`,
             function(data){
                 // load summary section
