@@ -95,15 +95,17 @@ $(document).ready(function(){
     })
 
     /** Function Add Popover 
-     * 
+     *  
      * @param {*} event 
      */
     const addPopover = (select_form, event_data) => {
         // create popover body
         let popover_content = `
             ${select_form}
-            <button type="submit" class="btn btn-primary btn-sm">Editar esta</button>
-            <button type="submit" class="btn btn-primary btn-sm">Editar similares </button>
+            <div class="popover__buttons">
+                <button id="btn_edit_this" type="submit" class="btn btn-primary btn-sm">Editar esta</button>
+                <button id="btn_edit_similars" type="submit" class="btn btn-primary btn-sm">Editar similares </button>
+            </div>
         `
         // add popover to all cells from category column 
         let current_category_cell = event_data.category_cell                       
