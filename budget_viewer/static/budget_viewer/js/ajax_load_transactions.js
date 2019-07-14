@@ -19,6 +19,8 @@ $(document).ready(function(){
         "income": "^[0-9]", // string that starts with a number
         "expense": "^-" // string ta starts with '-'
     }
+
+    // TODO: encapsulate it in a async function
     /**Year Click Event
      * When a year is clicked, it shows all months that have registered transactions
      */
@@ -56,6 +58,7 @@ $(document).ready(function(){
         })
     })
     
+    // TODO: encapsulate it in a async function
     /** Month Click Event
      * Show all registered transactions of the selected month
      */
@@ -186,12 +189,24 @@ $(document).ready(function(){
                     },
                     "success": function(data, textStatus, jqXHR ){
                         // TODO
+                        alert(data)
+                    },
+                    "error": function( jqXHR, textStatus, errorThrown) {
+                        alert(errorThrown)
                     }
                 })
                 // return message or error
                 .fail(function() {
                     // TODO
                     alert("Não foi possível atualizar a categoria da(s) transação(ões).")
+                })
+                .done(function(){
+
+                    // closes the popover TODO
+                    $('.popover').popover('hide')
+
+                    // reloads the table TODO
+                    $(`.month__item[data-id=${month_id}]`).trigger('click')
                 })
             })
 
