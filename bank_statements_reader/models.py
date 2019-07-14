@@ -91,16 +91,17 @@ class Category(models.Model):
         ('Education', 'Educação'),
         ('Supplies', 'Suprimentos')
     ]
-    
-    def natural_key(self):
-        return self.name
 
-    def get_translation(category_name):
+    def get_translation(self, category_name):
         """
         Receiveis a category name and returns the corresponding
         translation to portuguese (Brazillian)
         """
-        return TRANSLATION_PTBR[category_name]
+        translation_dict = {key:value for key, value in self.TRANSLATION_PTBR}
+        return translation_dict[category_name]
+
+    def natural_key(self):
+        return self.get_translation(self.name)
 
 class Year(models.Model):
     """
