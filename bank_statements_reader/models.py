@@ -6,6 +6,102 @@ from datetime import date, datetime
 from decimal import Decimal
 from django.core import serializers
 
+# Useful Links
+
+## Models 
+## https://docs.djangoproject.com/en/2.2/topics/db/models/
+
+## Objects Manager
+## https://docs.djangoproject.com/en/2.2/topics/db/managers/
+
+## Model Instance Reference
+## https://docs.djangoproject.com/en/2.2/ref/models/instances/
+
+## Model Field Reference
+## https://docs.djangoproject.com/en/2.2/ref/models/fields/
+
+class CategoryNameException(Exception):
+    """
+    Custom Category Exceptions
+    """
+    DEFAULT_MESSAGE = "Only especific categories are allowed"
+
+    def __init__(self, message=DEFAULT_MESSAGE):
+        self.message = message
+    
+
+
+class CategoryManager(models.Manager):
+
+    
+    def create_category(self, name):
+        """
+        Category.objects.create_category(name="Food")
+
+        Creates a Category object and saves it to the database
+        """
+
+        # checks if name matches one of the pre determined choices
+        if ( any([name in category_choice for category_choice in Category.CATEGORIES]) ):
+            category = self.create(name=name)
+        # raises exception if no match occurs
+        else:
+            raise CategoryNameException()
+        
+        return category
+
+
+class Category(models.Model):
+    """
+    Category model
+
+    Categories: 
+    Food, Entertainment, Transportation, HealthCare,
+    Clothing, Utilities, Education, Supplies
+
+    One Category can have many Transactions
+    but each Transaction belongs only to one category 
+    """
+
+    CATEGORIES = [
+        ('', ''),
+        ('Food', 'Food'),
+        ('Entertainment', 'Entertainment'),
+        ('Transportation', 'Transportation'),
+        ('HealthCare', 'HealthCare'),
+        ('Clothing', 'Clothing'),
+        ('Utilities', 'Utilities'),
+        ('Education', 'Education'),
+        ('Supplies', 'Supplies'),
+    ]
+
+    objects = CategoryManager()
+
+    name = models.CharField(max_length=25, default=None, null=True, blank=True, choices=CATEGORIES)
+    # TODO bank_account
+
+    TRANSLATION_PTBR = [
+        ('', ''),
+        ('Food', 'Alimentação'),
+        ('Entertainment', 'Lazer'),
+        ('Transportation', 'Transporte'),
+        ('HealthCare', 'Saúde'),
+        ('Clothing', 'Vestimenta'),
+        ('Utilities', 'Utilidades'),
+        ('Education', 'Educação'),
+        ('Supplies', 'Suprimentos')
+    ]
+
+    def get_translation(self, category_name):
+        """
+        Receiveis a category name and returns the corresponding
+        translation to portuguese (Brazillian)
+        """
+        translation_dict = {key:value for key, value in self.TRANSLATION_PTBR}
+        return translation_dict[category_name]
+
+    def natural_key(self):
+        return self.get_translation(self.name)
 
 class Year(models.Model):
     """
@@ -77,6 +173,7 @@ class Transaction(models.Model):
     date = models.DateField()
     slug = models.SlugField()
     month = models.ForeignKey('Month', on_delete=models.SET_NULL, null=True, related_name='transactions') # if month is deleted, the transactions still exists
+    category = models.ForeignKey('Category', on_delete=models.SET_NULL, null=True, related_name='transactions') #if category is deleted, the transactions still exists
 
     # methods
     def print_flow(self):
@@ -128,8 +225,10 @@ class Transaction(models.Model):
         ]
         """
         # https://docs.djangoproject.com/en/2.2/topics/serialization/
-        choosen_fields = ("statement_number", "date", "flow_method", "origin", "amount")
-        return serializers.serialize("json", query, fields=choosen_fields)
+        choosen_fields = ("statement_number", "date", "flow_method", "origin", "amount", "category")
+        serialized_transactions = serializers.serialize("json", query, fields=choosen_fields, use_natural_foreign_keys=True)
+        serialized_transactions = serialized_transactions.replace("null", '"a definir"')
+        return serialized_transactions
 
     
     @staticmethod
@@ -170,11 +269,8 @@ class Transaction(models.Model):
             except IndexError: # rows have diferents number of fields
                 pass
         return list_of_transactions
+    
+    def identify_category_by_transaction_description():
+        Transaction.objects.all()
 
-class BankStatementReader(models.Model):
-    """
-    Reads a statement csv file and process it to create
-    the Year, Month and Transaction models
-    """
-    # TODO
     

@@ -69,6 +69,8 @@
 </section>
 
 <!-- show transactions objects accordingly to the choosen options -->
+<!-- https://docs.djangoproject.com/en/dev/ref/csrf/#acquiring-csrf-token-from-html -->
+{% csrf_token %}
 <section class="table_section">
     <div class="table_container">
         <table id="transactions_table" class="table table-striped table-bordered" style="width: 100%;">
@@ -77,6 +79,7 @@
                    <th>Origem</th>
                    <th>Quantidade</th>
                    <th>Tipo</th>
+                   <th>Categoria</th>
                </tr>
            </thead>
         </table>
