@@ -71,15 +71,51 @@ class EditCategoryEvent(View):
 
             return HttpResponse(raw_select_form)
     
-    # def post(self, request, *args, **kwargs):
-    #     # edit all similar transactions or only the selected one
-    #     # checks if the edit will be for only one or all similars
-    #     # if only one
-    #     # find transaction by pk and update its category
-    #     # else
-    #     # find all transactions with the same origin and update its category
-    #     # handle success and error
-    #     pass
+    def post(self, request, *args, **kwargs):
+        # edit all similar transactions or only the selected one
+
+        new_category_name = request.POST['newCategoryName'] # TODO if this fails??
+        # TODO checks if Category already exists
+        new_category_name = request.POST['newCategoryName']
+        try:
+            # get existing category
+            category_object = Category.objects.get(name=new_category_name)
+        except Category.DoesNotExist: # happens if .get doenst find the object
+            # create new category for this user
+            category_object = Category.objects.create_category(name=new_category_name)
+        
+        # transaction primary key
+        row_pk = int(kwargs['row_pk'])
+        try:
+            selected_transaction = Transaction.objects.get(pk=row_pk)
+
+            # checks if the edit will be for only one or all similars
+            if ( request.POST['data'] == 'this' ):
+                print("Editar apenas essa transacao")
+                # find transaction by pk and update its category
+                selected_transaction.category = category_object
+                selected_transaction.save()
+
+                return HttpResponse("Registro atualizado com sucesso!.")
+            elif ( request.POST['data'] == 'similars' ):
+                # else
+                print("Editar todas as transacoes com a mesma origem")
+                # find all transactions with the same origin and update its category
+                origin = selected_transaction.origin
+
+                number_of_updates = Transaction.objects.filter(origin=origin).update(category=category_object)
+            
+                return HttpResponse("{0} foram atualizados com sucesso".format(number_of_updates))
+
+        except Transaction.DoesNotExist:
+            custom_response = HttpResponse("Não foi possível achar a transação selecionada.")
+            custom_response['status_code'] = 500
+            return HttpRescustom_responseponse
+        
+        
+        
+        
+        return JsonResponse("sim", safe=False)
 
 
         
