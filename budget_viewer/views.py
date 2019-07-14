@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from django.views.generic import ListView, View
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse, HttpResponse, HttpResponseBadRequest
 
-from bank_statements_reader.models import Transaction, Year, Month
+from bank_statements_reader.models import Transaction, Year, Month, Category
 from .forms import CategoryForm
 
 
@@ -49,12 +49,11 @@ class transactionsByMonth(ListView):
 
         # https://docs.djangoproject.com/en/2.2/ref/request-response/#serializing-non-dictionary-objects
         return JsonResponse(data, safe=False)
+
             
 class EditCategoryEvent(View):
 
     def get(self, request, *args, **kwargs):
-        print("INICIO GET")
-        print(kwargs)
         # receiveis the pk
         row_pk = int(kwargs['row_pk'])
         transaction_to_be_edited = Transaction.objects.get(pk=row_pk)
@@ -63,7 +62,7 @@ class EditCategoryEvent(View):
         raw_select_form = str(form['category'])
         # the selected option will be the current transaction's category (if exists)
         if (transaction_to_be_edited.category is not None):
-            index = raw_select_form.find('value="{val}"'.format(transaction_to_be_edited.category))
+            index = raw_select_form.find('value="{0}"'.format(transaction_to_be_edited.category.name)) # TODO index returning -1
             select_form = raw_select_form[: index] + 'selected' + raw_select_form[index - 1:]
             return HttpResponse(select_form)
         # return the html form to be inserted in popover

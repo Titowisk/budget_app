@@ -64,6 +64,7 @@ class Category(models.Model):
     """
 
     CATEGORIES = [
+        ('', ''),
         ('Food', 'Food'),
         ('Entertainment', 'Entertainment'),
         ('Transportation', 'Transportation'),
@@ -76,10 +77,11 @@ class Category(models.Model):
 
     objects = CategoryManager()
 
-    name = models.CharField(max_length=25, default=None, null=True, choices=CATEGORIES)
+    name = models.CharField(max_length=25, default=None, null=True, blank=True, choices=CATEGORIES)
     # TODO bank_account
 
-    TRANSLATION_PTBR = {
+    TRANSLATION_PTBR = [
+        ('', ''),
         ('Food', 'Alimentação'),
         ('Entertainment', 'Lazer'),
         ('Transportation', 'Transporte'),
@@ -88,7 +90,10 @@ class Category(models.Model):
         ('Utilities', 'Utilidades'),
         ('Education', 'Educação'),
         ('Supplies', 'Suprimentos')
-    }
+    ]
+    
+    def natural_key(self):
+        return self.name
 
     def get_translation(category_name):
         """
@@ -220,7 +225,7 @@ class Transaction(models.Model):
         """
         # https://docs.djangoproject.com/en/2.2/topics/serialization/
         choosen_fields = ("statement_number", "date", "flow_method", "origin", "amount", "category")
-        serialized_transactions = serializers.serialize("json", query, fields=choosen_fields)
+        serialized_transactions = serializers.serialize("json", query, fields=choosen_fields, use_natural_foreign_keys=True)
         serialized_transactions = serialized_transactions.replace("null", '"a definir"')
         return serialized_transactions
 
