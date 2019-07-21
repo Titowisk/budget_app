@@ -1,0 +1,29 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+
+{% block title %}Análise de Valores{% endblock title %}
+
+
+{% block custom_stylesheet %}
+<link rel="stylesheet" href="{% static 'core/css/bootstrap.css' %}"> <!-- Bootstrap 4-->
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script> <!-- Plotly -->
+
+{% endblock custom_stylesheet %}
+
+
+{% block content %}
+    <section class="analisys__section">
+        {{scatter_plot|safe}}
+    </section>
+{% endblock content %}
+
+
+{% block custom_script %}
+<script src="{% static 'core/js/jquery-3.4.1.js' %}"></script> <!-- JQuery -->
+<script src="{% static 'core/js/popper.min.js' %}"></script> <!-- Popper -->
+<script src="{% static 'core/js/bootstrap.js' %}"></script> <!-- Bootstrap -->
+{% endblock custom_script %}
+    
+    
+    
