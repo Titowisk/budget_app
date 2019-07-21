@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
+    path('analisys/', include('analasys_view.urls')),
     path('bank_statements_reader/', include('bank_statements_reader.urls')),
     path('', include('core.urls')),
     path('budget_viewer/', include('budget_viewer.urls')),

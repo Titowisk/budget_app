@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     # my_apps
     'bank_statements_reader.apps.BankStatementsReaderConfig',
     'core.apps.CoreConfig',
-    'budget_viewer.apps.BudgetViewerConfig'
+    'budget_viewer.apps.BudgetViewerConfig',
+    'analasys_view.apps.AnalasysViewConfig'
 ]
 
 MIDDLEWARE = [
