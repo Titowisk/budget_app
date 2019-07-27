@@ -90,7 +90,7 @@ def create_income_expense_scatter_plot(year_id):
 
     fig.add_trace(go.Scatter(
         x=months, y=y_expenses, name="Gastos",
-        line=dict(color='firebrick', width=4)
+        line=dict(color='#b22222', width=4)
     ))
     
     fig.add_trace(go.Scatter(
@@ -108,37 +108,72 @@ def create_income_expense_scatter_plot(year_id):
 
     return plot_div
 
+def create_income_expense_grouped_bar_chart(year_id):
+    """
+    Creates a plotly grouped box chart showing side-by-side
+    total volume of expenses x incomes by month of a selected
+    year
+
+    year_id: int number
+    """
+    month_objects = get_months_by_year(year_id)
+
+    # get chart data
+    months =  convert_to_verbose_months(month_objects)
+
+    y_expenses = get_transactions_sum_data(month_objects, amount_type='expenses')
+    
+    y_incomes = get_transactions_sum_data(month_objects, amount_type='incomes')
+
+    # build chart
+    fig = go.Figure(
+        data=[
+            go.Bar(name='Gastos', x=months, y=y_expenses, marker_color='#b22222'),
+            go.Bar(name="Rendas", x=months, y=y_incomes, marker_color='#22b222')
+        ]
+    )
+
+    fig.update_layout(barmode='group')
+
+    plot_div = plot(fig, output_type='div', include_plotlyjs=False)
+
+    return plot_div
 
 
 class AnalisysByIncomeView(TemplateView):
     """
-    TODO
+    Show initial Year menu for selection
+
+    
     """
     template_name = "analasys_view/analisys_by_income.html"
     # get data
     
     def get_context_data(self, **kwargs):
         """
-        TODO
+        context['years']: 
+
         """
         context = super(TemplateView, self).get_context_data(**kwargs)
        
         context['years'] = get_year_desc()
-        context['by_income'] = True
+        context['by_income'] = True # show only by_income elements in the interface
         return context
 
 
 class AnalisysByIncomePerYearView(TemplateView):
     """
-    TODO
+    Show Income x Expenses charts when user selects a year
     """
     template_name = "analasys_view/analisys_by_income.html"
 
     def get(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
         scatter_plot = create_income_expense_scatter_plot(kwargs['year_pk'])
-        
+        grouped_bar_plot = create_income_expense_grouped_bar_chart(kwargs['year_pk'])
+
         context['scatter_plot'] = scatter_plot
+        context['grouped_bar_plot'] = grouped_bar_plot
         context['by_income'] = True
         context['years'] = get_year_desc()
         return self.render_to_response(context)

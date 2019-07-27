@@ -43,7 +43,16 @@
     </section>
     <section class="analisys__section">
         {% if by_income %}
-        {{scatter_plot|safe}}
+        <div class="row">
+            <div class="col-md-12">
+                {{scatter_plot|safe}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                {{grouped_bar_plot|safe}}
+            </div>
+        </div>
         {% elif by_origin %}
         {% elif by_category %}
         {% endif %}
