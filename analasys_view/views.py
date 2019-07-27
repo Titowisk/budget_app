@@ -9,65 +9,83 @@ from bank_statements_reader.models import Year, Month, Transaction
 import plotly.graph_objects as go
 from plotly.offline import plot
 
-# Create your views here.
-
 # Aggregation Django
 # https://docs.djangoproject.com/en/2.2/topics/db/aggregation/
 
 # Filter look up reference
 # https://docs.djangoproject.com/en/2.2/ref/models/querysets/#django.db.models.query.QuerySet
 
-# class AnalisysView(TemplateView):
-#     template_name = "analasys_view/analisys.html"
-    
-    
-#     def get_context_data(self, **kwargs):
-#         context = super(TemplateView, self).get_context_data(**kwargs)
-#         context['years'] = Year.objects.all().order_by('-name')
-#         return context
-
 def get_year_desc():
     """
-    TODO
+    Query all year objects of a user
     """
     return Year.objects.all().order_by('-name')
 
-def create_scatter_plot_by_year(year_id):
+def get_months_by_year(year_id):
     """
-    TODO
+    Query all month objects by a selected year
+    returns a ordered asc month objects list 
+
+    year_id: a int number
+    """
+    return Month.objects.filter(year__id=year_id).order_by('month_number')
+
+def convert_to_verbose_months(month_objects):
+    """
+    Turn a list of Month objects into a list
+    of verbose name months
     """
     MONTHS = {
-        1: "Jan", 2: "Fev", 3: "Mar", 4: "Abr", 5: "Mai", 6: "Jun",
-        7: "Jul", 8: "Ago", 9: "Set", 10: "Out", 11: "Nov", 12: "Dez" 
-        }
-    # year_objects = Year.objects.all().order_by('-name') # - orders by DESC
-    month_objects = Month.objects.filter(year__id=year_id).order_by('month_number')
-    
-    # x_axis =  [MONTHS[month.month_number] for month in month_objects]
-    months =  [MONTHS[int(month.month_number)] for month in month_objects]
+        "1": "Jan", "2": "Fev", "3": "Mar", "4": "Abr", "5": "Mai", "6": "Jun",
+        "7": "Jul", "8": "Ago", "9": "Set", "10": "Out", "11": "Nov", "12": "Dez" 
+    }
+    return [MONTHS[month.month_number] for month in month_objects]
 
-    # y_axis = [
-    #     result['amount__sum'].quantize(D('0.01')).copy_abs() for result in 
-    #     [month.transactions.filter(amount__lte=0).aggregate(Sum('amount')) for month in month_objects]
-    #     ]
-    y_expenses = [
-        result['amount__sum'].quantize(D('0.01')).copy_abs()
-        if result['amount__sum'] != None
-        else 0
-        for result in 
-        [month.transactions.filter(amount__lte=0).aggregate(Sum('amount')) for month in month_objects]
+def get_transactions_sum_data(month_objects, amount_type):
+    """
+    Query transactions data for charts
+    returns a list of aggregate sum of transactions by month.
+
+    month_objects: a list of Month objects ordered by month_number
+    amount_type: either a 'expenses' or 'incomes' string.
+    """
+    if (amount_type == 'expenses'):
+        chart_data = [
+            result['amount__sum'].quantize(D('0.01')).copy_abs()
+            if result['amount__sum'] != None
+            else 0
+            for result in 
+            [month.transactions.filter(amount__lte=0).aggregate(Sum('amount')) for month in month_objects]
+        ]
+    elif (amount_type == 'incomes'):
+        chart_data =  [
+            result['amount__sum'].quantize(D('0.01')).copy_abs() 
+            if result['amount__sum'] != None
+            else 0
+            for result in 
+            [month.transactions.filter(amount__gt=0).aggregate(Sum('amount')) for month in month_objects]
         ]
     
-    y_incomes = [
-        result['amount__sum'].quantize(D('0.01')).copy_abs() 
-        if result['amount__sum'] != None
-        else 0
-        for result in 
-        [month.transactions.filter(amount__gt=0).aggregate(Sum('amount')) for month in month_objects]
-        ]
+    return chart_data
+
+def create_scatter_plot_by_year(year_id):
+    """
+    Creates a plotly scattter chart using transactions of each month
+    of a selected year.
+
+    year_id: int number
+    """
     
-    # get plotly.offline
-    # fig = go.Figure(data=go.Scatter(x=x_axis, y=y_axis))
+    month_objects = get_months_by_year(year_id)
+    
+    # build chart data 
+    months =  convert_to_verbose_months(month_objects)
+
+    y_expenses = get_transactions_sum_data(month_objects, amount_type='expenses')
+    
+    y_incomes = get_transactions_sum_data(month_objects, amount_type='incomes')
+    
+    # buids scatter-chart
     fig = go.Figure()
 
     fig.add_trace(go.Scatter(
@@ -81,7 +99,6 @@ def create_scatter_plot_by_year(year_id):
     ))
 
     fig.update_layout(
-        title='Gastos e Rendas do Ano XXXX', 
         xaxis_title='Meses',
         yaxis_title='Agregado por mês'
         )
