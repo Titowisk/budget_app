@@ -1,20 +1,53 @@
 {% extends 'core/base.html' %}
 {% load static %}
-
+<!-- https://docs.djangoproject.com/en/2.2/ref/templates/builtins/#url -->
 
 {% block title %}Análise de Valores{% endblock title %}
 
 
 {% block custom_stylesheet %}
 <link rel="stylesheet" href="{% static 'core/css/bootstrap.css' %}"> <!-- Bootstrap 4-->
+<link rel="stylesheet" href="{% static 'budget_viewer/css/transactions.css' %}"> 
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script> <!-- Plotly -->
 
 {% endblock custom_stylesheet %}
 
 
 {% block content %}
+    <!-- Menu Years -->
+    <section class="options">
+        <ul class="options__years">
+        
+            {% if years %}
+                {% for year in years %}
+                    {% if by_income %}
+                    <a class="year__link {% if year.id == year_pk %}year__link--selected{% endif %}" href="{% url 'by_income_per_year' year.id %}">
+                        <li class="year__item">{{ year.name }}</li>
+                    </a>
+                    {% elif by_origin %}
+                    
+                    <a class="year__link {% if year.id == year_pk %}year__link--selected{% endif %}" href="{% url 'by_origin' year.id %}">
+                        <li class="year__item">{{ year.name }}</li>
+                    </a>
+                    {% elif by_category %}
+                    <a class="year__link {% if year.id == year_pk %}year__link--selected{% endif %}" href="{% url 'by_category' year.id %}">
+                        <li class="year__item">{{ year.name }}</li>
+                    </a>
+                    {% endif %}
+                {% endfor %}
+            {% else %}       
+                <p>Oops!!</p>
+            {% endif %}
+             
+        </ul>
+    </section>
     <section class="analisys__section">
+        {% if by_income %}
         {{scatter_plot|safe}}
+        {% elif by_origin %}
+        {% elif by_category %}
+        {% endif %}
+        
     </section>
 {% endblock content %}
 
