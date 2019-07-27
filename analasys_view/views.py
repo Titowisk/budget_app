@@ -68,7 +68,7 @@ def get_transactions_sum_data(month_objects, amount_type):
     
     return chart_data
 
-def create_scatter_plot_by_year(year_id):
+def create_income_expense_scatter_plot(year_id):
     """
     Creates a plotly scattter chart using transactions of each month
     of a selected year.
@@ -108,6 +108,8 @@ def create_scatter_plot_by_year(year_id):
 
     return plot_div
 
+
+
 class AnalisysByIncomeView(TemplateView):
     """
     TODO
@@ -134,7 +136,7 @@ class AnalisysByIncomePerYearView(TemplateView):
 
     def get(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
-        scatter_plot = create_scatter_plot_by_year(kwargs['year_pk'])
+        scatter_plot = create_income_expense_scatter_plot(kwargs['year_pk'])
         
         context['scatter_plot'] = scatter_plot
         context['by_income'] = True
